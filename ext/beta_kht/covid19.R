@@ -727,7 +727,7 @@ overview_metrics_table_main <- function(
   config = config
 ){
 
-  yrwks <- fhi::isoyearweek(lubridate::today()-0:6*6)
+  yrwks <- fhi::isoyearweek_c(lubridate::today()-0:6*6)
 
   d <- pool %>% dplyr::tbl("results_covid19_metrics") %>%
     dplyr::filter(granularity_time == "week") %>%
