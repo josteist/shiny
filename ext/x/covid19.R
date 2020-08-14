@@ -486,7 +486,7 @@ covid19_ui <- function(id, config) {
                 "bortsett fra figur 3 der de vises hver for seg.", br(),
                 strong("Oppmøte"), " inkluderer takstkodene: 2ad, 2ak, 2fk, 11ak, 11ad", br(),
                 strong("Telefonkonsultasjon"), " inkluderer takstkodenene: 1ad, 1ak, 1bd, 1bk, 1h, 1g", br(),
-                strong("e-konsultasjon"), " inkluderer takstkodene: 2ae, 2aek, samt 1be kun for diagnosekode R991 og R992", br(), br(),
+                strong("e-konsultasjon"), " inkluderer takstkodene: 1be, 2ae", br(), br(),
 
 
                 strong("Luftvei diagnosekoder (samlet) i NorSySS inneholder:"), br(),
@@ -727,7 +727,7 @@ overview_metrics_table_main <- function(
   config = config
 ){
 
-  yrwks <- fhi::isoyearweek_c(lubridate::today()-0:6*6)
+  yrwks <- fhi::isoyearweek(lubridate::today()-0:6*6)
 
   d <- pool %>% dplyr::tbl("results_covid19_metrics") %>%
     dplyr::filter(granularity_time == "week") %>%
