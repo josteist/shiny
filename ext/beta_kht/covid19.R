@@ -486,7 +486,7 @@ covid19_ui <- function(id, config) {
                 "bortsett fra figur 3 der de vises hver for seg.", br(),
                 strong("Oppmøte"), " inkluderer takstkodene: 2ad, 2ak, 2fk, 11ak, 11ad", br(),
                 strong("Telefonkonsultasjon"), " inkluderer takstkodenene: 1ad, 1ak, 1bd, 1bk, 1h, 1g", br(),
-                strong("e-konsultasjon"), " inkluderer takstkodene: 1be, 2ae", br(), br(),
+                strong("e-konsultasjon"), " inkluderer takstkodene: 2ae, 2aek, samt 1be kun for diagnosekode R991 og R992", br(), br(),
 
 
                 strong("Luftvei diagnosekoder (samlet) i NorSySS inneholder:"), br(),
