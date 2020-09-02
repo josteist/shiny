@@ -16,11 +16,11 @@ news_ui <- function(id, config) {
     tabsetPanel(
       id="news",
       tabPanel(
-        title="Nytt",
+        title="Nytt fra FHI",
         news_news_ui("news_news", config=config)
       ),
       tabPanel(
-        title="FAQ",
+        title="Spørsmål og svar",
         news_faq_ui("news_faq", config=config)
       )
     )
