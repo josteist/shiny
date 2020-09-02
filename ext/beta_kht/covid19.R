@@ -2396,7 +2396,7 @@ covid19_overview_plot_county_proportion_weekly <- function(
     labels = fhiplot::format_nor_perc_0
   )
   q <- q + expand_limits(y = 0)
-  q <- q + scale_x_discrete(NULL)
+  q <- q + scale_x_discrete(NULL)#, breaks = fhiplot::every_nth(4))
   q <- q + fhiplot::scale_fill_fhi(NULL, guide="none")
   q <- q + fhiplot::scale_color_fhi(NULL)
   if(granularity_geo=="nation"){
