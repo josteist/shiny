@@ -1,3 +1,4 @@
+# ui ----
 covid19_ui <- function(id, config) {
   ns <- NS(id)
   dimensionId <- ns("dimension")
@@ -549,6 +550,7 @@ covid19_ui <- function(id, config) {
   )
 }
 
+# server ----
 covid19_server <- function(input, output, session, config) {
   #width <-  as.numeric(input$dimension[1])
 
@@ -721,7 +723,9 @@ covid19_server <- function(input, output, session, config) {
   outputOptions(output, "overview_norsyss_vs_msis", priority = 100)
 }
 
+# functions ----
 
+# tab 1 ----
 overview_metrics_table_main <- function(
   location_code = "norge",
   config = config
@@ -730,7 +734,12 @@ overview_metrics_table_main <- function(
   yrwks <- fhi::isoyearweek_c(lubridate::today()-0:6*6)
 
   d <- pool %>% dplyr::tbl("results_covid19_metrics") %>%
-    dplyr::filter(granularity_time == "week") %>%
+    mandatory_db_filter(
+      granularity_time = "week",
+      granularity_geo = NULL,
+      age = "total",
+      sex = "total"
+    ) %>%
     dplyr::filter(location_code== !!location_code) %>%
     dplyr::filter(yrwk %in% yrwks) %>%
     dplyr::filter(tag_outcome %in% c(

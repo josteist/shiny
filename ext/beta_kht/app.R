@@ -1,8 +1,12 @@
 ## app.R ##
+library(pool)
+library(data.table)
+library(magrittr)
+library(ggplot2)
+library(writexl)
 library(shiny)
 library(shinyjs)
 library(shinycssloaders)
-
 
 ## shinycssloaders global optios
 options(list(spinner.type = 6, spinner.color = "#027357"))
@@ -19,9 +23,7 @@ if (.Platform$OS.type == "windows"){
   }, .GlobalEnv)
 }
 
-
 source("global.R")
-source("no_data.R")
 
 source("news.R")
 source("news_news.R")
@@ -36,6 +38,8 @@ source("norsyss_overview.R")
 source("norsyss_weekly.R")
 source("norsyss_daily.R")
 source("norsyss_information.R")
+
+# end setup
 
 ui <- function(request){
     tagList(
