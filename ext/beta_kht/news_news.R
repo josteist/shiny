@@ -19,7 +19,10 @@ news_news_ui <- function(id, config) {
           " Seminaret startet med noen korte presentasjoner om håndtering av ulike typer covid-19-utbrudd,",
           " før fagfolk ved FHI svarte på spørsmål.", br(), br(),
 
-          a(href="https://vimeo.com/453407494/bc1e531271", "Opptak av webinaret finnes her")
+          a(href="https://vimeo.com/453407494/bc1e531271", "Trykk HER for å se opptak av webinaret"),br(), br(),
+
+
+          strong(""), br(), br()
 
         ),
         br()
