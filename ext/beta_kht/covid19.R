@@ -1090,12 +1090,12 @@ covid19_norsyss_vs_msis <- function(
   config
 ){
   if(get_granularity_geo(location_code) == "nation"){
-    covid19_norsyss_vs_msis_lab_daily(
+    covid19_norsyss_vs_msis_lab_weekly(
       location_code = location_code,
       config = config
     )
   } else if(get_granularity_geo(location_code) == "county") {
-    covid19_norsyss_vs_msis_lab_daily(
+    covid19_norsyss_vs_msis_lab_weekly(
       location_code = location_code,
       config = config
     )
@@ -1461,7 +1461,7 @@ covid19_overview_plot_national_syndromes_proportion <- function(
   config
 ){
   if(get_granularity_geo(location_code) %in% c("nation", "county")){
-    covid19_overview_plot_national_syndromes_proportion_daily(
+    covid19_overview_plot_national_syndromes_proportion_weekly(
       location_code = location_code,
       config = config
     )
@@ -1648,7 +1648,7 @@ covid19_overview_plot_national_source_proportion <- function(
   config
 ){
   if(get_granularity_geo(location_code) %in% c("nation", "county")){
-    covid19_overview_plot_national_source_proportion_daily(
+    covid19_overview_plot_national_source_proportion_weekly(
       location_code = location_code,
       config = config
     )
@@ -1905,7 +1905,7 @@ covid19_overview_plot_national_age_burden <- function(
   if(location_code %in% config$small_location_codes){
     no_data()
   } else if(get_granularity_geo(location_code) %in% c("nation", "county")){
-    covid19_overview_plot_national_age_burden_daily(
+    covid19_overview_plot_national_age_burden_weekly(
       location_code = location_code,
       config = config
     )
@@ -2077,7 +2077,7 @@ covid19_overview_plot_national_age_trends <- function(
   if(location_code %in% config$small_location_codes){
     no_data()
   } else if(get_granularity_geo(location_code) %in% c("nation", "county")){
-    covid19_overview_plot_national_age_trends_daily(
+    covid19_overview_plot_national_age_trends_weekly(
       location_code = location_code,
       config = config
     )
