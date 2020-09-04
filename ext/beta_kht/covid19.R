@@ -340,8 +340,9 @@ covid19_ui <- function(id, config) {
               width=12, align="left",
 
               p(
+
                 strong("I covid-19 overvåkingen bruker vi data fra NorSySS, MSIS, MSIS laboratoriedatabasen,",
-                " NoPaR, Symptometeret og fra modelleringsgruppa på FHI"),br(), br(),
+                " NoPaR, Symptometer og fra modelleringsgruppa på FHI"),br(), br(),
 
                 strong("NorSySS"),
                 "er forkortelsen for Norwegian Syndromic Surveillance System som er en del av Sykdomspulsen.", br(),
@@ -394,12 +395,14 @@ covid19_ui <- function(id, config) {
                 "- Vi har foreløpig kun NoPaR data på landsnivå på denne nettsiden.", br(),br(),
 
 
-                strong("Symptometeret"),
-                " er resultater fra innmelding til 'Meld fra ved mistanke om koronavirus',",
-                " en tjeneste for alle innbyggere for selvrapportering av symptomer som kan skyldes koronavirus.",
-                "- Symptometeret blir oppdatert på nettsiden ca kl 13 hver ukedag, i helger og på helligdager blir de foreløpig ikke oppdatert.",
-                br(),
-                "- Vi har foreløpig ingen data fra Symptometeret på denne nettsiden. Men jobber med saken.", br(),br(),
+                strong("Symptometer"),
+                " er et overvåkingsverktøy for å fange tidlige signaler på utbrudd av covid-19.",
+                " Et panel på ca. 50 000, ca. 1 % av befolkningen, bes hver uke om å rapportere om de har,",
+                " eller ikke har, symptomer som kan skyldes covid-19.",
+                " Invitasjonene til panelet skal sendes ut mot slutten av september,",
+                " slik at resultater herfra kan forventes i overgangen september – oktober.",
+                "- Symptometer vil bli oppdatert på nettsiden ca kl 13 hver ukedag, i helger og på helligdager blir de foreløpig ikke oppdatert.",
+                 br(),br(),
 
                 strong("Modelleringsdataene"),
                 "blir utarbeidet av modelleringsgruppa på FHI.",br(),
@@ -448,7 +451,7 @@ covid19_ui <- function(id, config) {
                 strong("- MSIS data"), " er basert på pasientens bosted (Folkeregistrerte adressse).", br(),
                 strong("- MSIS laboratoriedata"), " er basert på pasientens bosted (Folkeregistrerte adressse).", br(),
                 strong("- NoPaR")," har foreløpig kun data på landsnivå.", br(),
-                strong("- Symptometeret"), " har foreløpig ingen data.", br(),br(),
+                strong("- Symptometer"), " har foreløpig ingen data.", br(),br(),
 
                  strong("Kommunereformen:"),br(),
                 "Kommunenavn og fylkesnavn følger endrignene som trådte i kraft 1. januar 2020.",br(),
@@ -790,7 +793,7 @@ overview_metrics_table_main <- function(
     "MSIS lab",
     "NorSySS",
     "NorSySS",
-    "Symptometeret"
+    "Symptometer"
   )
   ]
 
