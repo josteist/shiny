@@ -8,7 +8,13 @@ news_ui <- function(id, config) {
         width=12, align="left",
         p(
           id="toptext",
-          strong("Informasjonen som finnes på denne siden er anonym, men er ment for kommuneleger fordi det krever kunnskap for å tolke disse på riktig måte. Dette er ikke ment som en offisiell statistikk."),br(),br()
+          "Du er nå i Nytt fra FHI fanen, over denne teksten ser du andre faner du kan velge blant.", br(), br(),
+
+          strong("Informasjonen som finnes på denne siden er anonym, men er ment for kommuneleger fordi det krever kunnskap for å tolke disse på riktig måte. Dette er ikke ment som en offisiell statistikk."),br(),br(),
+
+          "Under kan du velge blant to faner som gir deg forskjellig informasjon:", br(),
+          "- ",strong("Nytt fra FHI"), br(),
+          "- ",strong("Ofte stilte spørsmål"),br(), br()
         )
       )
     )
@@ -20,7 +26,7 @@ news_ui <- function(id, config) {
         news_news_ui("news_news", config=config)
       ),
       tabPanel(
-        title="Spørsmål og svar",
+        title="Ofte stilte spørsmål",
         news_faq_ui("news_faq", config=config)
       )
     )
