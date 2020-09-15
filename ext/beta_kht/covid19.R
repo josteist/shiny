@@ -555,6 +555,10 @@ covid19_ui <- function(id, config) {
 
 # server ----
 covid19_server <- function(input, output, session, config) {
+  # priority ----
+  outputOptions(output, "overview_metrics", priority = 200)
+  outputOptions(output, "overview_norsyss_vs_msis", priority = 100)
+
   #width <-  as.numeric(input$dimension[1])
 
   # tab 1 ----
@@ -720,10 +724,6 @@ covid19_server <- function(input, output, session, config) {
   )},
   res = 72
   )
-
-  # priority ----
-  outputOptions(output, "overview_metrics", priority = 200)
-  outputOptions(output, "overview_norsyss_vs_msis", priority = 100)
 }
 
 # functions ----
