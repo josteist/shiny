@@ -288,7 +288,7 @@ covid19_ui <- function(id, config) {
             column(
               width=12, align="left",
               br(),
-              shinycssloaders::withSpinner(plotOutput(ns("overview_map_county_proportion"), height = "600px")),
+              #shinycssloaders::withSpinner(plotOutput(ns("overview_map_county_proportion"), height = "600px")),
               br()
             )
           ),
@@ -313,7 +313,7 @@ covid19_ui <- function(id, config) {
             column(
               width=12, align="left",
               br(),
-              shinycssloaders::withSpinner(plotOutput(ns("overview_map_county_proportion_2"), height = "600px")),
+              #shinycssloaders::withSpinner(plotOutput(ns("overview_map_county_proportion_2"), height = "600px")),
               br()
             )
           )
