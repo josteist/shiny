@@ -260,7 +260,7 @@ covid19_ui <- function(id, config) {
               br(),
               p(
                  ),
-              uiOutput(ns("overview_ui_county_proportion")),
+              #uiOutput(ns("overview_ui_county_proportion")),
               #plotOutput(ns("overview_plot_county_proportion"), height="800px"),
               br()
               #shinycssloaders::withSpinnerplotOutput(ns("overview_plot_county_proportion"), height = "900px")
