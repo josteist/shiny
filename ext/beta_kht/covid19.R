@@ -852,7 +852,8 @@ covid19_plot_single <- function(
   multiplier_min_y_censor = -0.13,
   multiplier_min_y_end = -0.14,
   multiplier_min_y_start = -0.175,
-  left_labels = fhiplot::format_nor_perc_0
+  left_labels = fhiplot::format_nor_perc_0,
+  every_nth = 1
 ){
 
   stopifnot(type_left %in% c("col","line"))
@@ -1030,7 +1031,8 @@ covid19_plot_single <- function(
     )
   } else {
     q <- q + scale_x_discrete(
-      ""
+      "",
+      breaks = fhiplot::every_nth(every_nth)
     )
   }
   q <- q + fhiplot::scale_color_fhi(labs_legend)
@@ -1377,7 +1379,8 @@ covid19_norsyss_vs_msis_lab_weekly <- function(
     multiplier_min_y_censor = -0.2,
     multiplier_min_y_end = -0.14,
     multiplier_min_y_start = -0.175,
-    left_labels = fhiplot::format_nor
+    left_labels = fhiplot::format_nor,
+    every_nth = 2
   )
 
   list(pd_plot = pd_plot, pd_xl = pd_xl)
@@ -1452,7 +1455,8 @@ covid19_norsyss_vs_msis_weekly <- function(
     multiplier_min_y_censor = -0.2,
     multiplier_min_y_end = -0.14,
     multiplier_min_y_start = -0.175,
-    left_labels = fhiplot::format_nor
+    left_labels = fhiplot::format_nor,
+    every_nth = 2
   )
 
   list(pd_plot = pd_plot, pd_xl = pd_xl)
@@ -1641,7 +1645,8 @@ covid19_overview_plot_national_syndromes_proportion_weekly <- function(
     multiplier_min_y_censor = -0.2,
     multiplier_min_y_end = -0.14,
     multiplier_min_y_start = -0.175,
-    left_labels = fhiplot::format_nor_perc_0
+    left_labels = fhiplot::format_nor_perc_0,
+    every_nth = 2
   )
 }
 
@@ -1896,7 +1901,8 @@ covid19_overview_plot_national_source_proportion_weekly <- function(
     multiplier_min_y_censor = -0.2,
     multiplier_min_y_end = -0.14,
     multiplier_min_y_start = -0.175,
-    left_labels = fhiplot::format_nor
+    left_labels = fhiplot::format_nor,
+    every_nth = 2
   )
 }
 
@@ -2068,7 +2074,8 @@ covid19_overview_plot_national_age_burden_weekly <- function(
     multiplier_min_y_censor = -0.2,
     multiplier_min_y_end = -0.14,
     multiplier_min_y_start = -0.175,
-    left_labels = fhiplot::format_nor_perc_0
+    left_labels = fhiplot::format_nor_perc_0,
+    every_nth = 2
   )
 }
 
@@ -2272,7 +2279,7 @@ covid19_overview_plot_national_age_trends_weekly <- function(
     labels = fhiplot::format_nor_perc_0
   )
   q <- q + expand_limits(y = 0)
-  q <- q + scale_x_discrete(NULL)
+  q <- q + scale_x_discrete(NULL, breaks = fhiplot::every_nth(4))
   q <- q + lemon::facet_rep_wrap(~age, repeat.tick.labels = "all", ncol=3)
   q <- q + fhiplot::theme_fhi_lines(20, panel_on_top = T,
                                     panel.grid.major.x = element_blank(),
@@ -2408,7 +2415,7 @@ covid19_overview_plot_county_proportion_weekly <- function(
     labels = fhiplot::format_nor_perc_0
   )
   q <- q + expand_limits(y = 0)
-  q <- q + scale_x_discrete(NULL)#, breaks = fhiplot::every_nth(4))
+  q <- q + scale_x_discrete(NULL, breaks = fhiplot::every_nth(4))
   q <- q + fhiplot::scale_fill_fhi(NULL, guide="none")
   q <- q + fhiplot::scale_color_fhi(NULL)
   if(granularity_geo=="nation"){
