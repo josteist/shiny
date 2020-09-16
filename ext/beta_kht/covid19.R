@@ -294,10 +294,10 @@ covid19_ui <- function(id, config) {
               br(),
               p(
                  ),
-              #uiOutput(ns("overview_ui_county_proportion")),
+              uiOutput(ns("overview_ui_county_proportion")),
               #plotOutput(ns("overview_plot_county_proportion"), height="800px"),
-              br(),
-              shinycssloaders::withSpinner(plotOutput(ns("overview_plot_county_proportion"), height = "900px"))
+              br()
+              #shinycssloaders::withSpinner(plotOutput(ns("overview_plot_county_proportion"), height = "900px"))
             )
           ),
 
@@ -684,6 +684,21 @@ covid19_server <- function(input, output, session, config) {
   )
 
   # fig 3 ----
+  output$overview_plot_national_source_proportion <- renderCachedPlot({
+    req(input$covid_location_code)
+
+    covid19_overview_plot_national_source_proportion(
+      location_code = input$covid_location_code,
+      config = config
+    )
+  }, cacheKeyExpr={list(
+    input$covid_location_code,
+    dev_invalidate_cache
+  )},
+  res = 72
+  )
+
+  # fig 4 ----
   output$overview_plot_national_age_burden <- renderCachedPlot({
     req(input$covid_location_code)
 
@@ -698,7 +713,7 @@ covid19_server <- function(input, output, session, config) {
   res = 72
   )
 
-  # fig 4 ----
+  # fig 5 ----
   output$overview_plot_national_age_trends <- renderCachedPlot({
     req(input$covid_location_code)
 
@@ -713,7 +728,8 @@ covid19_server <- function(input, output, session, config) {
   res = 72
   )
 
-  # fig 5 ----
+  # fig 6 ----
+
   output$overview_plot_county_proportion <- renderCachedPlot({
     req(input$covid_location_code)
 
@@ -728,7 +744,6 @@ covid19_server <- function(input, output, session, config) {
   res = 72
   )
 
-  # fig 6 ----
   output$overview_ui_county_proportion <- renderUI({
     ns <- session$ns
     req(input$covid_location_code)
