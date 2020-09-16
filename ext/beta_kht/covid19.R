@@ -202,7 +202,7 @@ covid19_ui <- function(id, config) {
             column(
               width=12, align="left",
               br(),
-              shinycssloaders::withSpinner(plotOutput(ns("overview_plot_national_syndromes_proportion"), height = "700px")),
+              shinycssloaders::withSpinner(plotOutput(ns("fig_2"), height = "700px")),
               br()
             )
           ),
@@ -230,7 +230,7 @@ covid19_ui <- function(id, config) {
               p(
 
               ),
-              shinycssloaders::withSpinner(plotOutput(ns("overview_plot_national_source_proportion"), height = "700px")),
+              shinycssloaders::withSpinner(plotOutput(ns("fig_3"), height = "700px")),
               br()
             )
           ),
@@ -259,7 +259,7 @@ covid19_ui <- function(id, config) {
               br(),
               p(
                ),
-              shinycssloaders::withSpinner(plotOutput(ns("overview_plot_national_age_burden"), height = "700px")),
+              shinycssloaders::withSpinner(plotOutput(ns("fig_4"), height = "700px")),
               br()
             )
           ),
@@ -287,7 +287,7 @@ covid19_ui <- function(id, config) {
               p(
 
               ),
-              shinycssloaders::withSpinner(plotOutput(ns("overview_plot_national_age_trends"), height = "700px")),
+              shinycssloaders::withSpinner(plotOutput(ns("fig_5"), height = "700px")),
               br()
             )
           ),
@@ -312,7 +312,7 @@ covid19_ui <- function(id, config) {
               br(),
               p(
                  ),
-              uiOutput(ns("overview_ui_county_proportion")),
+              uiOutput(ns("ui_fig_6")),
               #plotOutput(ns("overview_plot_county_proportion"), height="800px"),
               br()
               #shinycssloaders::withSpinner(plotOutput(ns("overview_plot_county_proportion"), height = "900px"))
@@ -340,7 +340,7 @@ covid19_ui <- function(id, config) {
             column(
               width=12, align="left",
               br(),
-              shinycssloaders::withSpinner(plotOutput(ns("overview_map_county_proportion"), height = "600px")),
+              shinycssloaders::withSpinner(plotOutput(ns("fig_7"), height = "600px")),
               br()
             )
           ),
@@ -365,7 +365,7 @@ covid19_ui <- function(id, config) {
             column(
               width=12, align="left",
               br(),
-              shinycssloaders::withSpinner(plotOutput(ns("overview_map_county_proportion_2"), height = "600px")),
+              shinycssloaders::withSpinner(plotOutput(ns("fig_8"), height = "600px")),
               br()
             )
           )
@@ -689,10 +689,10 @@ covid19_server <- function(input, output, session, config) {
   )
 
   # fig 2 ----
-  output$overview_plot_national_syndromes_proportion <- renderCachedPlot({
+  output$fig_2 <- renderCachedPlot({
     req(input$covid_location_code)
 
-    covid19_overview_plot_national_syndromes_proportion(
+    fig_2_week(
       location_code = input$covid_location_code,
       config = config
     )
@@ -704,10 +704,10 @@ covid19_server <- function(input, output, session, config) {
   )
 
   # fig 3 ----
-  output$overview_plot_national_source_proportion <- renderCachedPlot({
+  output$fig_3 <- renderCachedPlot({
     req(input$covid_location_code)
 
-    covid19_overview_plot_national_source_proportion(
+    fig_3(
       location_code = input$covid_location_code,
       config = config
     )
@@ -719,10 +719,10 @@ covid19_server <- function(input, output, session, config) {
   )
 
   # fig 4 ----
-  output$overview_plot_national_age_burden <- renderCachedPlot({
+  output$fig_4 <- renderCachedPlot({
     req(input$covid_location_code)
 
-    covid19_overview_plot_national_age_burden(
+    fig_4(
       location_code = input$covid_location_code,
       config = config
     )
@@ -734,10 +734,10 @@ covid19_server <- function(input, output, session, config) {
   )
 
   # fig 5 ----
-  output$overview_plot_national_age_trends <- renderCachedPlot({
+  output$fig_5 <- renderCachedPlot({
     req(input$covid_location_code)
 
-    covid19_overview_plot_national_age_trends(
+    fig_5(
       location_code = input$covid_location_code,
       config = config
     )
@@ -750,10 +750,10 @@ covid19_server <- function(input, output, session, config) {
 
   # fig 6 ----
 
-  output$overview_plot_county_proportion <- renderCachedPlot({
+  output$fig_6 <- renderCachedPlot({
     req(input$covid_location_code)
 
-    covid19_overview_plot_county_proportion(
+    fig_6(
       location_code = input$covid_location_code,
       config = config
     )
@@ -764,7 +764,7 @@ covid19_server <- function(input, output, session, config) {
   res = 72
   )
 
-  output$overview_ui_county_proportion <- renderUI({
+  output$ui_fig_6 <- renderUI({
     ns <- session$ns
     req(input$covid_location_code)
 
@@ -772,13 +772,13 @@ covid19_server <- function(input, output, session, config) {
     height <- round(250 + 180*ceiling(length(location_codes)/3))
     height <- max(600, height)
     height <- paste0(height,"px")
-    shinycssloaders::withSpinner(plotOutput(ns("overview_plot_county_proportion"), height = height))
+    shinycssloaders::withSpinner(plotOutput(ns("fig_6"), height = height))
   })
 
   # fig 7 ----
-  output$overview_map_county_proportion <- renderCachedPlot({
+  output$fig_7 <- renderCachedPlot({
 
-    covid19_overview_map_county_proportion(
+    fig_7(
       location_code = input$covid_location_code,
       config = config
     )
@@ -790,9 +790,9 @@ covid19_server <- function(input, output, session, config) {
   )
 
   # fig 8 ----
-  output$overview_map_county_proportion_2 <- renderCachedPlot({
+  output$fig_8 <- renderCachedPlot({
 
-    covid19_overview_map_county_proportion_2(
+    fig_8(
       location_code = input$covid_location_code,
       config = config
     )
@@ -1203,6 +1203,12 @@ covid19_norsyss_vs_msis_lab_weekly <- function(
 ){
 
   d_left <- pool %>% dplyr::tbl("data_covid19_msis_by_time_location") %>%
+    mandatory_db_filter(
+      granularity_time = "week",
+      granularity_geo = NULL,
+      age = "total",
+      sex = "total"
+    ) %>%
     dplyr::filter(granularity_time == "week") %>%
     dplyr::filter(location_code== !!location_code) %>%
     dplyr::filter(date >= !!config$start_date) %>%
@@ -1228,10 +1234,14 @@ covid19_norsyss_vs_msis_lab_weekly <- function(
     dplyr::collect()
   setDT(d_right)
 
-  d_third <- pool %>%
-    dplyr::tbl("data_covid19_lab_by_time_location") %>%
+  d_third <- pool %>% dplyr::tbl("data_covid19_lab_by_time_location") %>%
+    mandatory_db_filter(
+      granularity_time = "day",
+      granularity_geo = NULL,
+      age = "total",
+      sex = "total"
+    ) %>%
     dplyr::filter(location_code== !!location_code) %>%
-    dplyr::filter(granularity_time=="day") %>%
     dplyr::filter(date >= !!config$start_date) %>%
     dplyr::select(yrwk, n_neg, n_pos) %>%
     dplyr::collect()
@@ -1272,7 +1282,7 @@ covid19_norsyss_vs_msis_lab_weekly <- function(
     labs_left = "Antall tilfeller meldt til MSIS",
     labs_right = "Andel NorSySS konsultasjoner\n og andel positive laboratorietester\n",
     labs_title = glue::glue(
-      "{names(config$choices_location_with_ward)[config$choices_location_with_ward==location_code]}\n",
+      "{names(config$choices_location_with_ward)[config$choices_location_with_ward==location_code]} (ukentlig)\n",
       "Antall covid-19 meldinger til MSIS og andel konsultasjoner for\n",
       "covid-19 (mistenkt, sannsynlig eller bekreftet) på legekontor og legevakt\n",
       "Data fra NorSySS og MSIS"
@@ -1306,7 +1316,12 @@ covid19_norsyss_vs_msis_weekly <- function(
 ){
 
   d_left <- pool %>% dplyr::tbl("data_covid19_msis_by_time_location") %>%
-    dplyr::filter(granularity_time == "week") %>%
+    mandatory_db_filter(
+      granularity_time = "week",
+      granularity_geo = NULL,
+      age = "total",
+      sex = "total"
+    ) %>%
     dplyr::filter(location_code== !!location_code) %>%
     dplyr::filter(date >= !!config$start_date) %>%
     dplyr::select(yrwk, n) %>%
@@ -1314,7 +1329,7 @@ covid19_norsyss_vs_msis_weekly <- function(
   setDT(d_left)
   setnames(d_left, "n", "value")
 
-  d_right <- pool %>% dplyr::tbl("data_norsyss_wide") %>%
+  d_right <- pool %>% dplyr::tbl("data_norsyss_wide_recent") %>%
     mandatory_db_filter(
       granularity_time = "week",
       granularity_geo = NULL,
@@ -1359,7 +1374,7 @@ covid19_norsyss_vs_msis_weekly <- function(
     labs_left = "Antall tilfeller meldt til MSIS",
     labs_right = "Andel NorSySS konsultasjoner\n",
     labs_title = glue::glue(
-      "{names(config$choices_location_with_ward)[config$choices_location_with_ward==location_code]}\n",
+      "{names(config$choices_location_with_ward)[config$choices_location_with_ward==location_code]} (ukentlig)\n",
       "Antall covid-19 meldinger til MSIS og andel konsultasjoner for\n",
       "covid-19 (mistenkt, sannsynlig eller bekreftet) på legekontor og legevakt\n",
       "Data fra NorSySS og MSIS"
@@ -1409,7 +1424,12 @@ covid19_norsyss_vs_msis_lab_daily <- function(
 ){
 
   d_left <- pool %>% dplyr::tbl("data_covid19_msis_by_time_location") %>%
-    dplyr::filter(granularity_time == "day") %>%
+    mandatory_db_filter(
+      granularity_time = "day",
+      granularity_geo = NULL,
+      age = "total",
+      sex = "total"
+    ) %>%
     dplyr::filter(location_code== !!location_code) %>%
     dplyr::filter(date >= !!config$start_date) %>%
     dplyr::select(date, n) %>%
@@ -1418,22 +1438,33 @@ covid19_norsyss_vs_msis_lab_daily <- function(
   d_left[, date:= as.Date(date)]
   setnames(d_left, "n", "value")
 
-  d_right <- pool %>% dplyr::tbl("data_norsyss_recent") %>%
+  d_right <- pool %>% dplyr::tbl("data_norsyss_wide_recent") %>%
+    mandatory_db_filter(
+      granularity_time = "day",
+      granularity_geo = NULL,
+      age = "total",
+      sex = "total"
+    ) %>%
     dplyr::filter(location_code== !!location_code) %>%
-    dplyr::filter(granularity_time=="day") %>%
-    dplyr::filter(tag_outcome %in% "covid19_vk_ote") %>%
-    dplyr::filter(age=="total") %>%
     dplyr::filter(date >= !!config$start_date) %>%
-    dplyr::select(date, n, consult_with_influenza) %>%
+    dplyr::select(
+      date,
+      n = n_covid19_vk_ote,
+      consult_with_influenza = denom_covid19_vk_ote
+      ) %>%
     dplyr::collect()
   setDT(d_right)
   d_right[, date:= as.Date(date)]
 
 
-  d_third <- pool %>%
-    dplyr::tbl("data_covid19_lab_by_time_location") %>%
+  d_third <- pool %>% dplyr::tbl("data_covid19_lab_by_time_location") %>%
+    mandatory_db_filter(
+      granularity_time = "day",
+      granularity_geo = NULL,
+      age = "total",
+      sex = "total"
+    ) %>%
     dplyr::filter(location_code== !!location_code) %>%
-    dplyr::filter(granularity_time=="day") %>%
     dplyr::filter(date >= !!config$start_date) %>%
     dplyr::select(date, pr100_pos) %>%
     dplyr::collect()
@@ -1475,7 +1506,7 @@ covid19_norsyss_vs_msis_lab_daily <- function(
     labs_left = "Antall tilfeller meldt til MSIS",
     labs_right = "Andel NorSySS konsultasjoner\n og andel positive laboratorietester\n",
     labs_title = glue::glue(
-      "{names(config$choices_location_with_ward)[config$choices_location_with_ward==location_code]}\n",
+      "{names(config$choices_location_with_ward)[config$choices_location_with_ward==location_code]} (daglig)\n",
       "Antall covid-19 meldinger til MSIS,\n",
       "andel positive laboratorietester og andel konsultasjoner for \n",
       "covid-19 (mistenkt, sannsynlig eller bekreftet) på legekontor og legevakt\n",
@@ -1510,7 +1541,12 @@ covid19_norsyss_vs_msis_daily <- function(
 ){
 
   d_left <- pool %>% dplyr::tbl("data_covid19_msis_by_time_location") %>%
-    dplyr::filter(granularity_time == "day") %>%
+    mandatory_db_filter(
+      granularity_time = "day",
+      granularity_geo = NULL,
+      age = "total",
+      sex = "total"
+    ) %>%
     dplyr::filter(location_code== !!location_code) %>%
     dplyr::filter(date >= !!config$start_date) %>%
     dplyr::select(date, n) %>%
@@ -1519,13 +1555,20 @@ covid19_norsyss_vs_msis_daily <- function(
   d_left[, date:= as.Date(date)]
   setnames(d_left, "n", "value")
 
-  d_right <- pool %>% dplyr::tbl("data_norsyss_recent") %>%
+  d_right <- pool %>% dplyr::tbl("data_norsyss_wide_recent") %>%
+    mandatory_db_filter(
+      granularity_time = "day",
+      granularity_geo = NULL,
+      age = "total",
+      sex = "total"
+    ) %>%
     dplyr::filter(location_code== !!location_code) %>%
-    dplyr::filter(granularity_time=="day") %>%
-    dplyr::filter(tag_outcome %in% "covid19_vk_ote") %>%
-    dplyr::filter(age=="total") %>%
     dplyr::filter(date >= !!config$start_date) %>%
-    dplyr::select(date, n, consult_with_influenza) %>%
+    dplyr::select(
+      date,
+      n = n_covid19_vk_ote,
+      consult_with_influenza = denom_covid19_vk_ote
+    ) %>%
     dplyr::collect()
   setDT(d_right)
   d_right[, date:= as.Date(date)]
@@ -1558,7 +1601,7 @@ covid19_norsyss_vs_msis_daily <- function(
     labs_left = "Antall tilfeller meldt til MSIS",
     labs_right = "Andel NorSySS konsultasjoner\n",
     labs_title = glue::glue(
-      "{names(config$choices_location_with_ward)[config$choices_location_with_ward==location_code]}\n",
+      "{names(config$choices_location_with_ward)[config$choices_location_with_ward==location_code]} (daglig)\n",
       "Antall covid-19 meldinger til MSIS og andel konsultasjoner for\n",
       "covid-19 (mistenkt, sannsynlig eller bekreftet) på legekontor og legevakt\n",
       "Data fra NorSySS og MSIS"
@@ -1580,127 +1623,62 @@ covid19_norsyss_vs_msis_daily <- function(
 }
 
 # fig 2 ----
-covid19_overview_plot_national_syndromes_proportion <- function(
+fig_2 <- function(
   location_code,
   config
 ){
-  if(get_granularity_geo(location_code) %in% c("nation", "county")){
-    covid19_overview_plot_national_syndromes_proportion_weekly(
-      location_code = location_code,
-      config = config
-    )
-  } else {
-    covid19_overview_plot_national_syndromes_proportion_weekly(
-      location_code = location_code,
-      config = config
-    )
-  }
-}
-
-covid19_overview_plot_national_syndromes_proportion_daily <- function(
-  location_code,
-  config
-){
-
-  pd <- pool %>% dplyr::tbl("data_norsyss_recent") %>%
-    dplyr::filter(tag_outcome %in% c(
-      "covid19_vk_ote",
-      "engstelig_luftveissykdom_ika_vk_ote",
-      "influensa_vk_ote",
-      "rxx_for_covid19_vk_ote",
-      "akkut_ovre_luftveisinfeksjon_vk_ote"
-    )) %>%
-    dplyr::filter(date >= !!config$start_date) %>%
-    dplyr::filter(age == "total") %>%
-    dplyr::filter(location_code == !!location_code) %>%
-    dplyr::select(tag_outcome, date, n, consult_with_influenza) %>%
-    dplyr::collect()
-  setDT(pd)
-  pd[, date:= as.Date(date)]
-
-  pd[,censor := ""]
-  pd[censor=="" & n>0 & n<5, censor := "N"]
-  pd[censor != "", n := 0]
-
-  pd[, andel := 100*n/consult_with_influenza]
-  pd[, no_data := consult_with_influenza==0]
-  pd[is.nan(andel), andel := 0]
-  pd[andel > 60, andel := 60]
-
-  pd[, name_outcome := factor(
-    tag_outcome,
-    levels = c(
-      "covid19_vk_ote",
-      "engstelig_luftveissykdom_ika_vk_ote",
-      "influensa_vk_ote",
-      "akkut_ovre_luftveisinfeksjon_vk_ote",
-      "rxx_for_covid19_vk_ote"
-    ),
-    labels = c(
-      "Covid-19 (mistenkt\nsannsynlig\neller bekreftet) (R991, R992)",
-      "Engstelig luftveissykdom\nIKA (R27)",
-      "Influensa (R80)",
-      "Akutt øvre\nluftveisinfeksjon (R74)",
-      "Luftvei diagnosekoder\n(samlet*)"
-    )
-  )]
-
-  setnames(pd,"andel","value")
-  setnames(pd, "name_outcome","group")
-
-  d_left <- pd
-
-  censored <- d_left[censor!=""]$date
-  no_data <- d_left[no_data==TRUE]$date
-
-  covid19_plot_single(
-    d_left = d_left,
-    d_right = NULL,
-    censored = censored,
-    no_data = no_data,
-    type_left="line",
-    group_left = TRUE,
-    labs_left = "Andel",
-    labs_right = NULL,
-    labs_title = glue::glue(
-      "{names(config$choices_location_with_ward)[config$choices_location_with_ward==location_code]}\n",
-      "Andel konsultasjoner med forskjellig luftveisagens\n",
-      "Data fra NorSySS"
-    ),
-    labs_caption = glue::glue(
-      "Røde piler på x-aksen viser helger og helligdager. Røde * på x-aksen viser sensurerte data\n",      "Nevneren er totalt antall konsultasjoner\n",
-      "*R- 01, 02, 03, 04, 05, 06, 07, 08, 09, 21, 24, 25, 27, 29, 72, 74, 75, 76, 77, 78, 79, 81, 82, 83, 99, 991, 992\n",
-      "Røde stiplede vertikale linjer på figuren betyr at ingen konsultasjoner er rapportert på disse datoene\n",
-      "Folkehelseinstituttet, {format(lubridate::today(),'%d.%m.%Y')}"
-    ),
-    multiplier_min_y_censor = -0.145,
-    multiplier_min_y_end = -0.155,
-    multiplier_min_y_start = -0.19,
-    left_labels = fhiplot::format_nor_perc_0
+  fig_2_week(
+    location_code = location_code,
+    config = config
   )
 }
 
-covid19_overview_plot_national_syndromes_proportion_weekly <- function(
+fig_2_week <- function(
   location_code,
   config
 ){
 
-  pd <- pool %>% dplyr::tbl("data_norsyss_recent") %>%
-    dplyr::filter(tag_outcome %in% c(
-      "covid19_vk_ote",
-      "engstelig_luftveissykdom_ika_vk_ote",
-      "influensa_vk_ote",
-      "rxx_for_covid19_vk_ote",
-      "akkut_ovre_luftveisinfeksjon_vk_ote"
-    )) %>%
+  pd <- pool %>% dplyr::tbl("data_norsyss_wide_recent") %>%
+    mandatory_db_filter(
+      granularity_time = "week",
+      granularity_geo = NULL,
+      age = "total",
+      sex = "total"
+    ) %>%
     dplyr::filter(date >= !!config$start_date) %>%
-    dplyr::filter(age == "total") %>%
     dplyr::filter(location_code == !!location_code) %>%
-    dplyr::select(tag_outcome, yrwk, n, consult_with_influenza) %>%
-    dplyr::group_by(tag_outcome, yrwk) %>%
-    dplyr::summarize(n=sum(n), consult_with_influenza=sum(consult_with_influenza)) %>%
+    dplyr::select(
+      yrwk,
+
+      n_covid19_vk_ote,
+      denom_covid19_vk_ote,
+
+      n_engstelig_luftveissykdom_ika_vk_ote,
+      denom_engstelig_luftveissykdom_ika_vk_ote,
+
+      n_influensa_vk_ote,
+      denom_influensa_vk_ote,
+
+      n_rxx_for_covid19_vk_ote,
+      denom_rxx_for_covid19_vk_ote,
+
+      n_akkut_ovre_luftveisinfeksjon_vk_ote,
+      denom_akkut_ovre_luftveisinfeksjon_vk_ote
+    ) %>%
     dplyr::collect()
   setDT(pd)
+
+  nam <- stringr::str_subset(names(pd), "^n_")
+  nam <- stringr::str_remove(nam, "^n_")
+  pd <- melt.data.table(
+    pd,
+    measure = patterns("^n_", "^denom_"),
+    value.name = c("n","consult_with_influenza"),
+    variable.factor = T
+  )
+  levels(pd$variable) <- nam
+  pd[, tag_outcome := as.character(variable)]
+  pd[, variable:=NULL]
 
   pd[,censor := ""]
   pd[censor=="" & n>0 & n<5, censor := "N"]
@@ -1768,163 +1746,65 @@ covid19_overview_plot_national_syndromes_proportion_weekly <- function(
 }
 
 # fig 3 ----
-covid19_overview_plot_national_source_proportion <- function(
+fig_3 <- function(
   location_code,
   config
 ){
-  if(get_granularity_geo(location_code) %in% c("nation", "county")){
-    covid19_overview_plot_national_source_proportion_weekly(
-      location_code = location_code,
-      config = config
-    )
-  } else {
-    covid19_overview_plot_national_source_proportion_weekly(
-      location_code = location_code,
-      config = config
-    )
-  }
-}
-
-covid19_overview_plot_national_source_proportion_daily <- function(
-  location_code,
-  config
-){
-
-  pd <- pool %>% dplyr::tbl("data_norsyss_recent") %>%
-    dplyr::filter(tag_outcome %in% c(
-      "covid19_k_o",
-      "covid19_k_t",
-      "covid19_k_e",
-      "covid19_v_o",
-      "covid19_v_t",
-      "covid19_v_e"
-    )) %>%
-    dplyr::filter(date >= !!config$start_date) %>%
-    dplyr::filter(age == "total") %>%
-    dplyr::filter(location_code == !!location_code) %>%
-    dplyr::select(tag_outcome, date, n, consult_with_influenza) %>%
-    dplyr::collect()
-  setDT(pd)
-  pd[, date:= as.Date(date)]
-
-  pd[,
-     contact_type := dplyr::case_when(
-       stringr::str_detect(tag_outcome, "_e$") ~ "e-konsultasjon",
-       stringr::str_detect(tag_outcome, "_t$") ~ "Telefon",
-       stringr::str_detect(tag_outcome, "_o$") ~ "Oppmøte"
-     )]
-
-  pd[,
-     practice_type := dplyr::case_when(
-       stringr::str_detect(tag_outcome, "_k_") ~ "Legekontor",
-       stringr::str_detect(tag_outcome, "_v_") ~ "Legevakt"
-     )]
-  pd[, cat:= paste0(contact_type,"/",practice_type)]
-  pd[,cat := factor(
-    cat,
-    levels = c(
-      "e-konsultasjon/Legekontor",
-      "e-konsultasjon/Legevakt",
-      "Telefon/Legekontor",
-      "Telefon/Legevakt",
-      "Oppmøte/Legekontor",
-      "Oppmøte/Legevakt"
-    )
-  )]
-
-  ### line creation
-
-  d_right <- pd[,.(
-    n=sum(n),
-    consult_with_influenza=sum(consult_with_influenza)
-  ),
-  by=.(date)
-  ]
-
-  # sensoring
-
-  d_right[,censor := ""]
-  d_right[censor=="" & n>0 & n<5, censor := "N"]
-  d_right[censor != "", n := 0]
-
-  d_right[, andel := 100*n/consult_with_influenza]
-  d_right[, no_data := consult_with_influenza==0]
-  d_right[is.nan(andel), andel := 0]
-  d_right[andel > 60, andel := 60]
-
-  setnames(d_right, "andel", "value")
-
-  d_left <- pd
-  d_left[,censor := ""]
-  d_left[censor=="" & n>0 & n<5, censor := "N"]
-  d_left[,total_n:=sum(n),by=.(date)]
-  d_left[censor=="" & total_n>0 & total_n<5, censor := "N"]
-  d_left[,total_n:=NULL]
-  d_left[censor=="" & consult_with_influenza>0 & consult_with_influenza<5 & stringr::str_detect(tag_outcome, "_o$"), censor := "T"]
-  d_left[censor != "", n := 0]
-
-  setnames(d_left, "n", "value")
-  setnames(d_left, "cat", "group")
-
-  censored <- unique(rbind(
-    d_left[,c("date","censor")],
-    d_right[,c("date","censor")]
-  ))[censor!=""]$date
-
-  no_data <- d_right[no_data==TRUE]$date
-
-  covid19_plot_single(
-    d_left = d_left,
-    d_right = d_right,
-    censored = censored,
-    no_data = no_data,
-    type_left="col",
-    group_left=TRUE,
-    labs_left = "Antall",
-    labs_right = "Andel",
-    labs_title = glue::glue(
-      "{names(config$choices_location_with_ward)[config$choices_location_with_ward==location_code]}\n",
-      "Antall konsultasjoner for covid-19 fordelt på type konsultasjon\n",
-      "samt andel konsultasjoner for covid-19\n",
-      "Data fra NorSySS"
-    ),
-    labs_caption = glue::glue(
-      "Røde piler på x-aksen viser helger og helligdager. Røde * på x-aksen viser sensurerte data\n",
-      "Søylene skal leses av på venstre side, den røde linjen skal leses av på høyre side\n",
-      "Nevneren på andelen er totalt antall konsultasjoner per dato i valgt geografisk område\n",
-      "Røde stiplede vertikale linjer på figuren betyr at ingen konsultasjoner er rapportert på disse datoene\n",
-      "Folkehelseinstituttet, {format(lubridate::today(),'%d.%m.%Y')}"
-    ),
-    legend_position = "right",
-    multiplier_min_y_censor = -0.13,
-    multiplier_min_y_end = -0.14,
-    multiplier_min_y_start = -0.175,
-    left_labels = fhiplot::format_nor
+  fig_3_week(
+    location_code = location_code,
+    config = config
   )
 }
 
-covid19_overview_plot_national_source_proportion_weekly <- function(
+fig_3_week <- function(
   location_code,
   config
 ){
 
-  pd <- pool %>% dplyr::tbl("data_norsyss_recent") %>%
-    dplyr::filter(tag_outcome %in% c(
-      "covid19_k_o",
-      "covid19_k_t",
-      "covid19_k_e",
-      "covid19_v_o",
-      "covid19_v_t",
-      "covid19_v_e"
-    )) %>%
+  pd <- pool %>% dplyr::tbl("data_norsyss_wide_recent") %>%
+    mandatory_db_filter(
+      granularity_time = "week",
+      granularity_geo = NULL,
+      age = "total",
+      sex = "total"
+    ) %>%
     dplyr::filter(date >= !!config$start_date) %>%
-    dplyr::filter(age == "total") %>%
     dplyr::filter(location_code == !!location_code) %>%
-    dplyr::select(tag_outcome, yrwk, n, consult_with_influenza) %>%
-    dplyr::group_by(tag_outcome, yrwk) %>%
-    dplyr::summarize(n = sum(n), consult_with_influenza=sum(consult_with_influenza)) %>%
+    dplyr::select(
+      yrwk,
+
+      n_covid19_v_o,
+      denom_covid19_v_o,
+
+      n_covid19_v_t,
+      denom_covid19_v_t,
+
+      n_covid19_v_e,
+      denom_covid19_v_e,
+
+      n_covid19_k_o,
+      denom_covid19_k_o,
+
+      n_covid19_k_t,
+      denom_covid19_k_t,
+
+      n_covid19_k_e,
+      denom_covid19_k_e
+    ) %>%
     dplyr::collect()
   setDT(pd)
+
+  nam <- stringr::str_subset(names(pd), "^n_")
+  nam <- stringr::str_remove(nam, "^n_")
+  pd <- melt.data.table(
+    pd,
+    measure = patterns("^n_", "^denom_"),
+    value.name = c("n","consult_with_influenza"),
+    variable.factor = T
+  )
+  levels(pd$variable) <- nam
+  pd[, tag_outcome := as.character(variable)]
+  pd[, variable:=NULL]
 
   pd[,
      contact_type := dplyr::case_when(
@@ -2024,113 +1904,39 @@ covid19_overview_plot_national_source_proportion_weekly <- function(
 }
 
 # fig 4 ----
-covid19_overview_plot_national_age_burden <- function(
+fig_4 <- function(
   location_code,
   config
 ){
   if(location_code %in% config$small_location_codes){
     no_data()
-  } else if(get_granularity_geo(location_code) %in% c("nation", "county")){
-    covid19_overview_plot_national_age_burden_weekly(
-      location_code = location_code,
-      config = config
-    )
   } else {
-    covid19_overview_plot_national_age_burden_weekly(
+    fig_4_week(
       location_code = location_code,
       config = config
     )
   }
 }
 
-covid19_overview_plot_national_age_burden_daily <- function(
+fig_4_week <- function(
   location_code,
   config
 ){
 
-  pd <- pool %>% dplyr::tbl("data_norsyss_recent") %>%
+  pd <- pool %>% dplyr::tbl("data_norsyss_wide_recent") %>%
+    mandatory_db_filter(
+      granularity_time = "week",
+      granularity_geo = NULL,
+      age = c("0-4","5-14","15-19","20-29","30-64","65+"),
+      sex = "total"
+    ) %>%
     dplyr::filter(date >= !!config$start_date) %>%
-    dplyr::filter(tag_outcome == "covid19_vk_ote") %>%
     dplyr::filter(location_code== !!location_code) %>%
-    dplyr::filter(age != "total") %>%
-    dplyr::select(date, age, n, consult_with_influenza) %>%
-    dplyr::collect()
-  setDT(pd)
-  pd[, date:= as.Date(date)]
-
-  pd[,age:=factor(
-    age,
-    levels = c(
-      "0-4",
-      "5-14",
-      "15-19",
-      "20-29",
-      "30-64",
-      "65+"
-    )
-  )]
-  pd[, consult_with_influenza_totalt := sum(consult_with_influenza), by=.(date)]
-
-
-  # sensoring
-  pd[,censor := ""]
-  pd[censor=="" & n>0 & n<5, censor := "N"]
-  pd[censor != "", n := 0]
-
-  pd[, andel := 100*n/consult_with_influenza_totalt]
-  pd[, no_data := consult_with_influenza_totalt==0]
-  pd[is.nan(andel), andel := 0]
-  pd[andel > 60, andel := 60]
-
-  d_left <- pd
-
-  setnames(d_left, "andel", "value")
-  setnames(d_left, "age", "group")
-
-  censored <- unique(d_left[censor!=""]$date)
-  no_data <- unique(d_left[no_data==TRUE]$date)
-
-  covid19_plot_single(
-    d_left = d_left,
-    d_right = NULL,
-    censored = censored,
-    no_data = no_data,
-    type_left="col",
-    group_left=TRUE,
-    labs_left = "Andel",
-    labs_right = NULL,
-    labs_title = glue::glue(
-      "{names(config$choices_location_with_ward)[config$choices_location_with_ward==location_code]}\n",
-      "Andel konsultasjoner med covid-19 (mistenkt, sannsynlig eller bekreftet) fordelt på aldersgruppe\n",
-      "Data fra NorSySS"
-    ),
-    labs_caption = glue::glue(
-      "Røde * på x-aksen viser sensurerte data\n",
-      "For alle aldersgruppene er nevneren totalt antall konsultasjoner (alle aldersgrupper summert)\n",
-      "Røde stiplede vertikale linjer på figuren betyr at ingen konsultasjoner er rapportert på disse datoene\n",
-      "Folkehelseinstituttet, {format(lubridate::today(),'%d.%m.%Y')}"
-    ),
-    labs_legend = "Aldersgruppe",
-    legend_position = "right",
-    multiplier_min_y_censor = -0.13,
-    multiplier_min_y_end = -0.14,
-    multiplier_min_y_start = -0.175,
-    left_labels = fhiplot::format_nor_perc_0
-  )
-}
-
-covid19_overview_plot_national_age_burden_weekly <- function(
-  location_code,
-  config
-){
-  pd <- pool %>% dplyr::tbl("data_norsyss_recent") %>%
-    dplyr::filter(date >= !!config$start_date) %>%
-    dplyr::filter(tag_outcome == "covid19_vk_ote") %>%
-    dplyr::filter(location_code== !!location_code) %>%
-    dplyr::filter(age != "total") %>%
-    dplyr::select(yrwk, age, n, consult_with_influenza) %>%
-    dplyr::group_by(yrwk, age) %>%
-    dplyr::summarize(n=sum(n), consult_with_influenza=sum(consult_with_influenza)) %>%
+    dplyr::select(
+      yrwk,
+      age,
+      n = n_covid19_vk_ote,
+      consult_with_influenza = denom_covid19_vk_ote) %>%
     dplyr::collect()
   setDT(pd)
 
@@ -2197,139 +2003,40 @@ covid19_overview_plot_national_age_burden_weekly <- function(
 }
 
 # fig 5 ----
-covid19_overview_plot_national_age_trends <- function(
+fig_5 <- function(
   location_code,
   config
 ){
   if(location_code %in% config$small_location_codes){
     no_data()
-  } else if(get_granularity_geo(location_code) %in% c("nation", "county")){
-    covid19_overview_plot_national_age_trends_weekly(
-      location_code = location_code,
-      config = config
-    )
   } else {
-    covid19_overview_plot_national_age_trends_weekly(
+    fig_5_week(
       location_code = location_code,
       config = config
     )
   }
 }
 
-covid19_overview_plot_national_age_trends_daily <- function(
+fig_5_week <- function(
   location_code,
   config
 ){
-  pd <- pool %>% dplyr::tbl("data_norsyss_recent") %>%
+
+  pd <- pool %>% dplyr::tbl("data_norsyss_wide_recent") %>%
+    mandatory_db_filter(
+      granularity_time = "week",
+      granularity_geo = NULL,
+      age = NULL,
+      sex = "total"
+    ) %>%
     dplyr::filter(date >= !!config$start_date) %>%
-    dplyr::filter(tag_outcome == "covid19_vk_ote") %>%
     dplyr::filter(location_code== !!location_code) %>%
-    dplyr::select(date, age, n, consult_with_influenza) %>%
-    dplyr::collect()
-  setDT(pd)
-  pd[, date:= as.Date(date)]
-
-  pd[,age:=factor(
-    age,
-    levels = c(
-      "total",
-      "0-4",
-      "5-14",
-      "15-19",
-      "20-29",
-      "30-64",
-      "65+"
-    ),
-    labels = c(
-      "Totalt",
-      "0-4",
-      "5-14",
-      "15-19",
-      "20-29",
-      "30-64",
-      "65+"
-    )
-  )]
-
-  # sensoring
-  pd[, consult_with_influenza_totalt := sum(consult_with_influenza), by=.(date)]
-
-  pd[,censor := ""]
-  pd[censor=="" & n>0 & n<5, censor := "N"]
-  pd[censor != "", n := 0]
-
-  pd[, andel := 100*n/consult_with_influenza]
-  pd[, no_data := consult_with_influenza_totalt==0]
-  pd[is.nan(andel), andel := 0]
-  pd[andel > 60, andel := 60]
-
-  censored <- unique(pd[,c("date","age","censor")])[censor!=""]
-
-  max_y <- max(pd$andel, na.rm=T)
-  max_y <- max(c(max_y,5))
-  min_y_censor <- 0.01*max_y
-
-  q <- ggplot(pd, aes(x=date,y=andel))
-  q <- q + geom_col(fill = fhiplot::base_color, width=0.8)
-  if(sum(pd$no_data)>0){
-    q <- q + geom_vline(data=pd[no_data==TRUE], mapping=aes(xintercept = date),color= "red", lty=3, lwd=1.5)
-  }
-  if(nrow(censored)>0){
-    q <- q + geom_text(
-      data=censored,
-      label="*",
-      y = min_y_censor,
-      size=10,
-      label.r = grid::unit(0, "lines"),
-      label.size = NA,
-      color="red"
-    )
-  }
-  q <- q + scale_y_continuous(
-    "Andel",
-    breaks = fhiplot::pretty_breaks(4),
-    expand = expand_scale(mult = c(0, 0.1)),
-    labels = fhiplot::format_nor_perc_0,
-    limits=c(0,max_y)
-  )
-  q <- q + expand_limits(y = 0)
-  q <- q + scale_x_date(
-    NULL,
-    date_breaks = "7 days",
-    date_labels = "%d.%m"
-  )
-  q <- q + lemon::facet_rep_wrap(~age, repeat.tick.labels = "all", ncol=3)
-  q <- q + fhiplot::theme_fhi_lines(20, panel_on_top = T,
-                                    panel.grid.major.x = element_blank(),
-                                    panel.grid.minor.x = element_blank()
-  )
-  q <- q + fhiplot::set_x_axis_vertical()
-  q <- q + theme(legend.key.size = unit(1, "cm"))
-  q <- q + labs(title = glue::glue(
-    "{names(config$choices_location_with_ward)[config$choices_location_with_ward==location_code]}\n",
-    "Andel konsultasjoner med covid-19 (mistenkt, sannsynlig eller bekreftet) fordelt på aldersgrupper\n",
-    "Data fra NorSySS"
-  ))
-  q <- q + labs(caption=glue::glue(
-    "Røde * på x-aksen viser sensurerte data\n",
-    "Nevneren er totalt antall konsultasjoner per dato, geografisk område og aldersgruppe\n",
-    "Røde stiplede vertikale linjer på figuren betyr at ingen konsultasjoner er rapportert på disse datoene\n",
-    "Folkehelseinstituttet, {format(lubridate::today(),'%d.%m.%Y')}"
-  ))
-  q
-}
-
-covid19_overview_plot_national_age_trends_weekly <- function(
-  location_code,
-  config
-){
-  pd <- pool %>% dplyr::tbl("data_norsyss_recent") %>%
-    dplyr::filter(date >= !!config$start_date) %>%
-    dplyr::filter(tag_outcome == "covid19_vk_ote") %>%
-    dplyr::filter(location_code== !!location_code) %>%
-    dplyr::select(yrwk, age, n, consult_with_influenza) %>%
-    dplyr::group_by(yrwk, age) %>%
-    dplyr::summarize(n = sum(n), consult_with_influenza = sum(consult_with_influenza)) %>%
+    dplyr::select(
+      yrwk,
+      age,
+      n = n_covid19_vk_ote,
+      consult_with_influenza = denom_covid19_vk_ote
+    ) %>%
     dplyr::collect()
   setDT(pd)
 
@@ -2419,45 +2126,57 @@ covid19_overview_plot_national_age_trends_weekly <- function(
 }
 
 # fig 6 ----
-covid19_overview_plot_county_proportion <- function(
+fig_6 <- function(
   location_code,
   config
 ){
-  if(get_granularity_geo(location_code) %in% c("nation", "county")){
-    covid19_overview_plot_county_proportion_weekly(
-      location_code = location_code,
-      config = config
-    )
-  } else {
-    covid19_overview_plot_county_proportion_weekly(
-      location_code = location_code,
-      config = config
-    )
-  }
+  fig_6_week(
+    location_code = location_code,
+    config = config
+  )
 }
 
-covid19_overview_plot_county_proportion_weekly <- function(
+fig_6_week <- function(
   location_code,
   config
 ){
 
   location_codes <- get_dependent_location_codes(location_code = location_code)
-
   granularity_geo <- get_granularity_geo(location_code)
 
-  pd <- pool %>% dplyr::tbl("data_norsyss_recent") %>%
-    dplyr::filter(tag_outcome %in% c(
-      "covid19_vk_ote",
-      "engstelig_luftveissykdom_ika_vk_ote"
-    )) %>%
+  pd <- pool %>% dplyr::tbl("data_norsyss_wide_recent") %>%
+    mandatory_db_filter(
+      granularity_time = "week",
+      granularity_geo = NULL,
+      age = "total",
+      sex = "total"
+    ) %>%
     dplyr::filter(date >= !!config$start_date) %>%
-    dplyr::filter(age == "total") %>%
     dplyr::filter(location_code %in% !!location_codes) %>%
-    dplyr::select(tag_outcome, location_code, yrwk, n, consult_with_influenza) %>%
-    dplyr::group_by(tag_outcome, location_code, yrwk) %>%
-    dplyr::summarize(n = sum(n), consult_with_influenza = sum(consult_with_influenza)) %>%
+    dplyr::select(
+      yrwk,
+      location_code,
+
+      n_covid19_vk_ote,
+      denom_covid19_vk_ote,
+
+      n_engstelig_luftveissykdom_ika_vk_ote,
+      denom_engstelig_luftveissykdom_ika_vk_ote
+    ) %>%
     dplyr::collect()
   setDT(pd)
+
+  nam <- stringr::str_subset(names(pd), "^n_")
+  nam <- stringr::str_remove(nam, "^n_")
+  pd <- melt.data.table(
+    pd,
+    measure = patterns("^n_", "^denom_"),
+    value.name = c("n","consult_with_influenza"),
+    variable.factor = T
+  )
+  levels(pd$variable) <- nam
+  pd[, tag_outcome := as.character(variable)]
+  pd[, variable:=NULL]
 
   pd[
     fhidata::norway_locations_long_b2020,
@@ -2568,7 +2287,7 @@ covid19_overview_plot_county_proportion_weekly <- function(
 }
 
 # fig 7 ----
-covid19_overview_map_county_proportion <- function(
+fig_7 <- function(
   location_code,
   config
 ){
@@ -2701,7 +2420,7 @@ covid19_overview_map_county_proportion <- function(
 }
 
 # fig 8 ----
-covid19_overview_map_county_proportion_2 <- function(
+fig_8 <- function(
   location_code,
   config
 ){

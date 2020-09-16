@@ -177,15 +177,21 @@ covid19_int_msis <- function(location_codes, cumulative, config){
 
 covid19_int_norsyss_total <- function(location_codes, cumulative, config){
 
-   d <- pool %>% dplyr::tbl("data_norsyss_recent") %>%
+   d <- pool %>% dplyr::tbl("data_norsyss_wide_recent") %>%
+     mandatory_db_filter(
+       granularity_time = "week",
+       granularity_geo = NULL,
+       age = "total",
+       sex = "total"
+     ) %>%
     dplyr::filter(location_code %in%!!location_codes)%>%
-    dplyr::filter(granularity_time=="day")%>%
-    dplyr::filter(tag_outcome %in% "covid19_vk_ote") %>%
-    dplyr::filter(age=="total") %>%
     dplyr::filter(date >= !!config$start_date) %>%
-    dplyr::select(yrwk, location_code, n, consult_with_influenza) %>%
-    dplyr::group_by(location_code, yrwk) %>%
-    dplyr::summarize(n=sum(n), consult_with_influenza=sum(consult_with_influenza)) %>%
+    dplyr::select(
+      yrwk,
+      location_code,
+      n = n_covid19_vk_ote,
+      consult_with_influenza = denom_covid19_vk_ote
+      ) %>%
     dplyr::collect()
 
   setDT(d)
@@ -222,15 +228,21 @@ covid19_int_norsyss_total <- function(location_codes, cumulative, config){
 
 covid19_int_norsyss_age <- function(location_codes, cumulative, config){
 
-d <- pool %>% dplyr::tbl("data_norsyss_recent") %>%
+  d <- pool %>% dplyr::tbl("data_norsyss_wide_recent") %>%
+    mandatory_db_filter(
+      granularity_time = "week",
+      granularity_geo = NULL,
+      age = c("0-4","5-14","15-19","20-29","30-64","65+"),
+      sex = "total"
+    ) %>%
     dplyr::filter(location_code %in%!!location_codes)%>%
-    dplyr::filter(granularity_time=="day")%>%
-    dplyr::filter(tag_outcome %in% "covid19_vk_ote") %>%
     dplyr::filter(date >= !!config$start_date) %>%
-    dplyr::filter(!age %in% "total") %>%
-    dplyr::select(yrwk, location_code, age, n, consult_with_influenza) %>%
-    dplyr::group_by(location_code, age, yrwk) %>%
-    dplyr::summarize(n=sum(n), consult_with_influenza=sum(consult_with_influenza)) %>%
+    dplyr::select(
+      yrwk,
+      location_code,
+      n = n_covid19_vk_ote,
+      consult_with_influenza = denom_covid19_vk_ote
+    ) %>%
     dplyr::collect()
 
   setDT(d)
