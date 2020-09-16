@@ -3,7 +3,7 @@ source("utils_mandatory_db_filter.R")
 
 db_config <- list(
   driver = Sys.getenv("DB_DRIVER", "Sql Server"),
-  server = Sys.getenv("DB_SERVER", "dm-test"),
+  server = Sys.getenv("DB_SERVER", "dm-prod"),
   db = Sys.getenv("DB_DB", "Sykdomspulsen_surv"),
   port = as.integer(Sys.getenv("DB_PORT", 1433)),
   user = Sys.getenv("DB_USER", "root"),
