@@ -4,6 +4,23 @@ covid19_ui <- function(id, config) {
   dimensionId <- ns("dimension")
 
   tagList(
+    # absolutePanel(
+    #   id = "toc",
+    #   class = "panel panel-default",
+    #   fixed = TRUE,
+    #   draggable = TRUE,
+    #   top=20,
+    #   left="auto",
+    #   right=20,
+    #   bottom="auto",
+    #   width=330,
+    #   height=400,
+    #   `z-index`=" 10000!important",
+    #
+    #     h2("HELLO")
+    #
+    # ),
+
     fluidRow(
       column(
         width=12, align="left",
@@ -23,6 +40,7 @@ covid19_ui <- function(id, config) {
     tabsetPanel(
       id="covid19",
 
+      # overview panel ----
       tabPanel(
         title="Oversikt",
         tagList(
@@ -354,9 +372,11 @@ covid19_ui <- function(id, config) {
         )
       ),
 
+      # comparison panel ----
       tabPanel("Sammenlikning",
                covid19_comparison_ui("covid19_comparison", config)),
 
+      # modelling panel ----
       tabPanel(
         title="Modellering",
         covid19_modelling_ui("covid19_modelling", config=config)
