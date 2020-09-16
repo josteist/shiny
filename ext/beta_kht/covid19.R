@@ -93,12 +93,12 @@ covid19_ui <- function(id, config) {
             )
           ),
 
-          # fig 1 ----
+          # fig 1a ----
           fluidRow(
             column(
               width=12, align="left",
               p(
-                strong("Figur 1")," viser antall covid-19 meldinger ",
+                strong("Figur 1a")," viser antall covid-19 meldinger ",
                 "til MSIS (blå søyler) sammenstilt med andel konsultasjoner ",
                 "for covid-19 (mistenkt, sannsynlig eller bekreftet) på ",
                 "legekontor og legevakt gjennom NorSySS (rød linje) og andel positive laboratorietester (blå linje).",
@@ -110,7 +110,7 @@ covid19_ui <- function(id, config) {
                 " Se mer informasjon om sensurerte data i 'Informasjon' fanen.",
                 br(),
                 br(),
-                downloadButton(ns("download_xls"), "Last ned tabell", class = "knappe"),
+                downloadButton(ns("download_fig_1a"), "Last ned tabell", class = "knappe"),
                 tags$head(tags$style(".knappe{background-color:#add8e6;} .knappe{color: #111;}")),
               )
             )
@@ -121,8 +121,42 @@ covid19_ui <- function(id, config) {
               width=12, align="left",
               br(),
               p(
-                ),
-              shinycssloaders::withSpinner(plotOutput(ns("overview_norsyss_vs_msis"), height = "700px")),
+              ),
+              shinycssloaders::withSpinner(plotOutput(ns("fig_1a"), height = "700px")),
+              br()
+            )
+          ),
+
+          # fig 1b ----
+          fluidRow(
+            column(
+              width=12, align="left",
+              p(
+                strong("Figur 1b")," viser antall covid-19 meldinger ",
+                "til MSIS (blå søyler) sammenstilt med andel konsultasjoner ",
+                "for covid-19 (mistenkt, sannsynlig eller bekreftet) på ",
+                "legekontor og legevakt gjennom NorSySS (rød linje) og andel positive laboratorietester (blå linje).",
+                "Denne figuren kan gi en ",
+                "oversikt over trendene i forhold til hverandre.",
+                br(),
+                "Du kan laste ned en tabell for denne figuren.",
+                " I tabellen vil det kunne være noen celler uten tall. Dette er sensurerte data.",
+                " Se mer informasjon om sensurerte data i 'Informasjon' fanen.",
+                br(),
+                br(),
+                downloadButton(ns("download_fig_1b"), "Last ned tabell", class = "knappe"),
+                tags$head(tags$style(".knappe{background-color:#add8e6;} .knappe{color: #111;}")),
+              )
+            )
+          ),
+
+          fluidRow(
+            column(
+              width=12, align="left",
+              br(),
+              p(
+              ),
+              shinycssloaders::withSpinner(plotOutput(ns("fig_1b"), height = "700px")),
               br()
             )
           ),
@@ -262,8 +296,8 @@ covid19_ui <- function(id, config) {
                  ),
               #uiOutput(ns("overview_ui_county_proportion")),
               #plotOutput(ns("overview_plot_county_proportion"), height="800px"),
-              br()
-              #shinycssloaders::withSpinnerplotOutput(ns("overview_plot_county_proportion"), height = "900px")
+              br(),
+              shinycssloaders::withSpinner(plotOutput(ns("overview_plot_county_proportion"), height = "900px"))
             )
           ),
 
@@ -288,7 +322,7 @@ covid19_ui <- function(id, config) {
             column(
               width=12, align="left",
               br(),
-              #shinycssloaders::withSpinner(plotOutput(ns("overview_map_county_proportion"), height = "600px")),
+              shinycssloaders::withSpinner(plotOutput(ns("overview_map_county_proportion"), height = "600px")),
               br()
             )
           ),
@@ -313,7 +347,7 @@ covid19_ui <- function(id, config) {
             column(
               width=12, align="left",
               br(),
-              #shinycssloaders::withSpinner(plotOutput(ns("overview_map_county_proportion_2"), height = "600px")),
+              shinycssloaders::withSpinner(plotOutput(ns("overview_map_county_proportion_2"), height = "600px")),
               br()
             )
           )
@@ -578,18 +612,17 @@ covid19_server <- function(input, output, session, config) {
   )
 
 
-  # fig 1 ----
-  norsyss_vs_msis_list <- reactive({
-
-      covid19_norsyss_vs_msis(
+  # fig 1a ----
+  fig_1a_list <- reactive({
+    fig_1a(
       location_code = input$covid_location_code,
       config = config
     )
   })
 
-  output$overview_norsyss_vs_msis <- renderCachedPlot({
+  output$fig_1a <- renderCachedPlot({
 
-    norsyss_vs_msis_list()$pd_plot
+    fig_1a_list()$pd_plot
 
   }, cacheKeyExpr={list(
     input$covid_location_code,
@@ -598,27 +631,41 @@ covid19_server <- function(input, output, session, config) {
   res = 72
   )
 
-  ## Download table
-  output$download_xls <- downloadHandler(
+  # Download table
+  output$download_fig_1a <- downloadHandler(
 
     filename = function(){ paste0("covid19_overview_", lubridate::today(), ".xlsx")},
     content = function(file){
-      writexl::write_xlsx(norsyss_vs_msis_list()$pd_xl, file)
+      writexl::write_xlsx(fig_1a_list()$pd_xl, file)
     }
   )
 
-  output$overview_plot_national_syndromes_proportion <- renderCachedPlot({
-    req(input$covid_location_code)
-
-    covid19_overview_plot_national_syndromes_proportion(
+  # fig 1b ----
+  fig_1b_list <- reactive({
+    fig_1b(
       location_code = input$covid_location_code,
       config = config
     )
+  })
+
+  output$fig_1b <- renderCachedPlot({
+
+    fig_1b_list()$pd_plot
+
   }, cacheKeyExpr={list(
     input$covid_location_code,
     dev_invalidate_cache
   )},
   res = 72
+  )
+
+  # Download table
+  output$download_fig_1b <- downloadHandler(
+
+    filename = function(){ paste0("covid19_overview_", lubridate::today(), ".xlsx")},
+    content = function(file){
+      writexl::write_xlsx(fig_1b_list()$pd_xl, file)
+    }
   )
 
   # fig 2 ----
@@ -723,114 +770,11 @@ covid19_server <- function(input, output, session, config) {
 
   # priority ----
   outputOptions(output, "overview_metrics", priority = 200)
-  outputOptions(output, "overview_norsyss_vs_msis", priority = 100)
+  outputOptions(output, "fig_1a", priority = 100)
+  outputOptions(output, "fig_1b", priority = 99)
 }
 
 # functions ----
-
-# tab 1 ----
-overview_metrics_table_main <- function(
-  location_code = "norge",
-  config = config
-){
-
-  yrwks <- fhi::isoyearweek_c(lubridate::today()-0:6*6)
-
-  d <- pool %>% dplyr::tbl("results_covid19_metrics") %>%
-    mandatory_db_filter(
-      granularity_time = "week",
-      granularity_geo = NULL,
-      age = "total",
-      sex = "total"
-    ) %>%
-    dplyr::filter(location_code== !!location_code) %>%
-    dplyr::filter(yrwk %in% yrwks) %>%
-    dplyr::filter(tag_outcome %in% c(
-      "n_hospital_main_cause",
-      "n_msis",
-      "n_lab_tested",
-      "pr100_lab_pos",
-      "n_norsyss",
-      "pr100_norsyss",
-      "pr100_sr_symptoms"
-    )) %>%
-    dplyr::select(yrwk, tag_outcome, formatted, censor) %>%
-    dplyr::collect()
-  setDT(d)
-  d[censor==T, formatted:="*"]
-
-  d[, tag_outcome := factor(
-    tag_outcome,
-    levels = c(
-      "n_hospital_main_cause",
-      "n_msis",
-      "n_lab_tested",
-      "pr100_lab_pos",
-      "n_norsyss",
-      "pr100_norsyss",
-      "pr100_sr_symptoms"
-    ),
-    labels = c(
-      "Nye sykehusinnleggelser for covid-19",
-      "Nye tilfeller av covid-19",
-      "Testede for covid-19",
-      "Andel positive blant testede",
-      "Legekonsultasjoner for covid-19",
-      "Andel legekonsultasjoner",
-      "Relevante symptomer"
-    )
-  )]
-  d <- dcast.data.table(
-    d,
-    tag_outcome ~ yrwk,
-    fill="-",
-    value.var = "formatted"
-  )
-  d[, Kilde := c(
-    "NoPaR",
-    "MSIS",
-    "MSIS lab",
-    "MSIS lab",
-    "NorSySS",
-    "NorSySS",
-    "Symptometer"
-  )
-  ]
-
-  d[, Benevning := c(
-    "Antall",
-    "Antall",
-    "Antall",
-    "Andel (%) av testede",
-    "Antall",
-    "Andel (%) av alle konsultasjoner",
-    "Andel av respondenter"
-  )
-  ]
-
-  setnames(d,"tag_outcome", "Indikator")
-  setcolorder(d, c(
-    "Indikator",
-    "Kilde",
-    "Benevning"
-  ))
-
-  tab <- d
-
-  font_size <- formattable::formatter(
-    "span",
-    style="font-size:14px;"
-  )
-
-  ft <- formattable::formattable(
-    tab,
-    list(~font_size),
-    align = c(rep("l",3),rep("c", ncol(tab) - 3))
-  )
-  ft
-
-  list(ft = ft, d = d)
-}
 
 covid19_plot_single <- function(
   granularity_time = "day",
@@ -952,14 +896,14 @@ covid19_plot_single <- function(
       mapping = aes(y = value,
                     fill = right_legend_labs[3]),
       width = 0.8
-      )
+    )
 
     q <- q + geom_line(
       data=d_right,
       mapping = aes(y=scaled_value,
                     group=1,
                     color = right_legend_labs[1]
-                    ),
+      ),
       lwd = 3
     )
 
@@ -968,7 +912,7 @@ covid19_plot_single <- function(
       mapping = aes(y = scaled_value,
                     group = 1,
                     color = right_legend_labs[2]
-                    ),
+      ),
       size = 3
 
     )
@@ -1089,22 +1033,123 @@ make_table_generic <- function(...) {
 
 }
 
-# fig 1 ----
-covid19_norsyss_vs_msis <- function(
+
+# tab 1 ----
+overview_metrics_table_main <- function(
+  location_code = "norge",
+  config = config
+){
+
+  yrwks <- fhi::isoyearweek_c(lubridate::today()-0:6*6)
+
+  d <- pool %>% dplyr::tbl("results_covid19_metrics") %>%
+    mandatory_db_filter(
+      granularity_time = "week",
+      granularity_geo = NULL,
+      age = "total",
+      sex = "total"
+    ) %>%
+    dplyr::filter(location_code== !!location_code) %>%
+    dplyr::filter(yrwk %in% yrwks) %>%
+    dplyr::filter(tag_outcome %in% c(
+      "n_hospital_main_cause",
+      "n_msis",
+      "n_lab_tested",
+      "pr100_lab_pos",
+      "n_norsyss",
+      "pr100_norsyss",
+      "pr100_sr_symptoms"
+    )) %>%
+    dplyr::select(yrwk, tag_outcome, formatted, censor) %>%
+    dplyr::collect()
+  setDT(d)
+  d[censor==T, formatted:="*"]
+
+  d[, tag_outcome := factor(
+    tag_outcome,
+    levels = c(
+      "n_hospital_main_cause",
+      "n_msis",
+      "n_lab_tested",
+      "pr100_lab_pos",
+      "n_norsyss",
+      "pr100_norsyss",
+      "pr100_sr_symptoms"
+    ),
+    labels = c(
+      "Nye sykehusinnleggelser for covid-19",
+      "Nye tilfeller av covid-19",
+      "Testede for covid-19",
+      "Andel positive blant testede",
+      "Legekonsultasjoner for covid-19",
+      "Andel legekonsultasjoner",
+      "Relevante symptomer"
+    )
+  )]
+  d <- dcast.data.table(
+    d,
+    tag_outcome ~ yrwk,
+    fill="-",
+    value.var = "formatted"
+  )
+  d[, Kilde := c(
+    "NoPaR",
+    "MSIS",
+    "MSIS lab",
+    "MSIS lab",
+    "NorSySS",
+    "NorSySS",
+    "Symptometer"
+  )
+  ]
+
+  d[, Benevning := c(
+    "Antall",
+    "Antall",
+    "Antall",
+    "Andel (%) av testede",
+    "Antall",
+    "Andel (%) av alle konsultasjoner",
+    "Andel av respondenter"
+  )
+  ]
+
+  setnames(d,"tag_outcome", "Indikator")
+  setcolorder(d, c(
+    "Indikator",
+    "Kilde",
+    "Benevning"
+  ))
+
+  tab <- d
+
+  font_size <- formattable::formatter(
+    "span",
+    style="font-size:14px;"
+  )
+
+  ft <- formattable::formattable(
+    tab,
+    list(~font_size),
+    align = c(rep("l",3),rep("c", ncol(tab) - 3))
+  )
+  ft
+
+  list(ft = ft, d = d)
+}
+
+
+# fig 1a ----
+fig_1a <- function(
   location_code,
   config
 ){
-  if(get_granularity_geo(location_code) == "nation"){
-    covid19_norsyss_vs_msis_lab_weekly(
-      location_code = location_code,
-      config = config
+  if(get_granularity_geo(location_code) %in% c(
+    "nation",
+    "county",
+    "municip"
     )
-  } else if(get_granularity_geo(location_code) == "county") {
-    covid19_norsyss_vs_msis_lab_weekly(
-      location_code = location_code,
-      config = config
-    )
-  } else if(get_granularity_geo(location_code) == "municip") {
+  ){
     covid19_norsyss_vs_msis_lab_weekly(
       location_code = location_code,
       config = config
@@ -1114,6 +1159,212 @@ covid19_norsyss_vs_msis <- function(
       location_code = location_code,
       config = config
     )
+  }
+}
+
+covid19_norsyss_vs_msis_lab_weekly <- function(
+  location_code,
+  config
+){
+
+  d_left <- pool %>% dplyr::tbl("data_covid19_msis_by_time_location") %>%
+    dplyr::filter(granularity_time == "week") %>%
+    dplyr::filter(location_code== !!location_code) %>%
+    dplyr::filter(date >= !!config$start_date) %>%
+    dplyr::select(yrwk, n) %>%
+    dplyr::collect()
+  setDT(d_left)
+  setnames(d_left, "n", "value")
+
+  d_right <- pool %>% dplyr::tbl("data_norsyss_wide_recent") %>%
+    mandatory_db_filter(
+      granularity_time = "week",
+      granularity_geo = NULL,
+      age = "total",
+      sex = "total"
+    ) %>%
+    dplyr::filter(location_code== !!location_code) %>%
+    dplyr::filter(date >= !!config$start_date) %>%
+    dplyr::select(
+      yrwk,
+      n=n_covid19_vk_ote,
+      consult_with_influenza=denom_covid19_vk_ote
+    ) %>%
+    dplyr::collect()
+  setDT(d_right)
+
+  d_third <- pool %>%
+    dplyr::tbl("data_covid19_lab_by_time_location") %>%
+    dplyr::filter(location_code== !!location_code) %>%
+    dplyr::filter(granularity_time=="day") %>%
+    dplyr::filter(date >= !!config$start_date) %>%
+    dplyr::select(yrwk, n_neg, n_pos) %>%
+    dplyr::collect()
+  setDT(d_third)
+
+  d_third <- d_third[,.(
+    pr100_pos = 100*sum(n_pos)/sum(n_pos+n_neg)
+  ),keyby=.(yrwk)]
+  d_third[is.nan(pr100_pos), pr100_pos := 0]
+  setnames(d_third, "pr100_pos", "value")
+
+  d_right[,censor := ""]
+  d_right[censor=="" & n>0 & n<5, censor := "N"]
+  d_right[censor != "", n := 0]
+
+  d_right[, value := 100* n / consult_with_influenza]
+  d_right[is.nan(value), value := 0]
+  d_right[value>60, value := 60]
+  d_right[, no_data := consult_with_influenza==0]
+  d_right[,consult_with_influenza := NULL]
+
+
+  ## Create table
+  pd_xl <- make_table_generic(d_left, d_right, d_third)
+
+  ## Create plot
+  censored <- d_right[censor!=""]$yrwk
+  no_data <- d_right[no_data==T]$yrwk
+
+  pd_plot <- covid19_plot_single(
+    granularity_time = "week",
+    d_left = d_left,
+    d_right = d_right,
+    d_third = d_third,
+    censored = censored,
+    no_data = no_data,
+    type_left="col",
+    labs_left = "Antall tilfeller meldt til MSIS",
+    labs_right = "Andel NorSySS konsultasjoner\n og andel positive laboratorietester\n",
+    labs_title = glue::glue(
+      "{names(config$choices_location_with_ward)[config$choices_location_with_ward==location_code]}\n",
+      "Antall covid-19 meldinger til MSIS og andel konsultasjoner for\n",
+      "covid-19 (mistenkt, sannsynlig eller bekreftet) på legekontor og legevakt\n",
+      "Data fra NorSySS og MSIS"
+    ),
+    labs_caption = glue::glue(
+      "\nRøde * på x-aksen viser sensurerte data\n",
+      "Søylene skal leses av på venstre side, den røde linjen skal leses av på høyre side\n",
+      "Nevneren på andelen er totalt antall konsultasjoner per dato i valgt geografisk område\n",
+      "Røde stiplede vertikale linjer på figuren betyr at ingen konsultasjoner er rapportert på disse datoene\n",
+      "Folkehelseinstituttet, {format(lubridate::today(),'%d.%m.%Y')}"
+    ),
+    right_legend_labs = c(
+      "Andel NorSySS konsultasjoner",
+      "Andel positive laboratorietester",
+      "Antall tilfeller meldt til MSIS"
+    ),
+    right_legend_direction = -1,
+    multiplier_min_y_censor = -0.2,
+    multiplier_min_y_end = -0.14,
+    multiplier_min_y_start = -0.175,
+    left_labels = fhiplot::format_nor,
+    every_nth = 2
+  )
+
+  list(pd_plot = pd_plot, pd_xl = pd_xl)
+}
+
+covid19_norsyss_vs_msis_weekly <- function(
+  location_code,
+  config
+){
+
+  d_left <- pool %>% dplyr::tbl("data_covid19_msis_by_time_location") %>%
+    dplyr::filter(granularity_time == "week") %>%
+    dplyr::filter(location_code== !!location_code) %>%
+    dplyr::filter(date >= !!config$start_date) %>%
+    dplyr::select(yrwk, n) %>%
+    dplyr::collect()
+  setDT(d_left)
+  setnames(d_left, "n", "value")
+
+  d_right <- pool %>% dplyr::tbl("data_norsyss_wide") %>%
+    mandatory_db_filter(
+      granularity_time = "week",
+      granularity_geo = NULL,
+      age = "total",
+      sex = "total"
+    ) %>%
+    dplyr::filter(location_code== !!location_code) %>%
+    dplyr::filter(date >= !!config$start_date) %>%
+    dplyr::select(
+      yrwk,
+      n=n_covid19_vk_ote,
+      consult_with_influenza=denom_covid19_vk_ote
+    ) %>%
+    dplyr::collect()
+  setDT(d_right)
+
+  d_right[,censor := ""]
+  d_right[censor=="" & n>0 & n<5, censor := "N"]
+  d_right[censor != "", n := 0]
+
+  d_right[, value := 100* n / consult_with_influenza]
+  d_right[is.nan(value), value := 0]
+  d_right[value>60, value := 60]
+  d_right[, no_data := consult_with_influenza==0]
+  d_right[,consult_with_influenza := NULL]
+
+
+  ## Create table
+  pd_xl <- make_table_generic(d_left, d_right)
+
+  ## Create plot
+  censored <- d_right[censor!=""]$yrwk
+  no_data <- d_right[no_data==T]$yrwk
+
+  pd_plot <- covid19_plot_single(
+    granularity_time = "week",
+    d_left = d_left,
+    d_right = d_right,
+    censored = censored,
+    no_data = no_data,
+    type_left="col",
+    labs_left = "Antall tilfeller meldt til MSIS",
+    labs_right = "Andel NorSySS konsultasjoner\n",
+    labs_title = glue::glue(
+      "{names(config$choices_location_with_ward)[config$choices_location_with_ward==location_code]}\n",
+      "Antall covid-19 meldinger til MSIS og andel konsultasjoner for\n",
+      "covid-19 (mistenkt, sannsynlig eller bekreftet) på legekontor og legevakt\n",
+      "Data fra NorSySS og MSIS"
+    ),
+    labs_caption = glue::glue(
+      "\nRøde * på x-aksen viser sensurerte data\n",
+      "Søylene skal leses av på venstre side, den røde linjen skal leses av på høyre side\n",
+      "Nevneren på andelen er totalt antall konsultasjoner per dato i valgt geografisk område\n",
+      "Røde stiplede vertikale linjer på figuren betyr at ingen konsultasjoner er rapportert på disse datoene\n",
+      "Folkehelseinstituttet, {format(lubridate::today(),'%d.%m.%Y')}"
+    ),
+    multiplier_min_y_censor = -0.2,
+    multiplier_min_y_end = -0.14,
+    multiplier_min_y_start = -0.175,
+    left_labels = fhiplot::format_nor,
+    every_nth = 2
+  )
+
+  list(pd_plot = pd_plot, pd_xl = pd_xl)
+}
+
+# fig 1b ----
+fig_1b <- function(
+  location_code,
+  config
+){
+  if(get_granularity_geo(location_code) == "nation"){
+    covid19_norsyss_vs_msis_lab_daily(
+      location_code = location_code,
+      config = config
+    )
+  } else if(get_granularity_geo(location_code) == "county") {
+    covid19_norsyss_vs_msis_lab_daily(
+      location_code = location_code,
+      config = config
+    )
+  } else if(get_granularity_geo(location_code) == "municip") {
+    list(pd_plot = no_data(), pd_xl = NULL)
+  } else {
+    list(pd_plot = no_data(), pd_xl = NULL)
   }
 }
 
@@ -1169,6 +1420,11 @@ covid19_norsyss_vs_msis_lab_daily <- function(
   ## Create table
   pd_xl <- make_table_generic(d_left, d_right, d_third)
 
+  # truncate data
+  dates <- rev(d_left$date)[1:28]
+  d_left <- d_left[date %in% dates]
+  d_right <- d_right[date %in% dates]
+  d_third <- d_third[date %in% dates]
 
   ## Create plot
   censored <- d_right[censor!=""]$date
@@ -1283,180 +1539,6 @@ covid19_norsyss_vs_msis_daily <- function(
     multiplier_min_y_end = -0.14,
     multiplier_min_y_start = -0.175,
     left_labels = fhiplot::format_nor
-  )
-
-  list(pd_plot = pd_plot, pd_xl = pd_xl)
-}
-
-covid19_norsyss_vs_msis_lab_weekly <- function(
-  location_code,
-  config
-){
-
-  d_left <- pool %>% dplyr::tbl("data_covid19_msis_by_time_location") %>%
-    dplyr::filter(granularity_time == "week") %>%
-    dplyr::filter(location_code== !!location_code) %>%
-    dplyr::filter(date >= !!config$start_date) %>%
-    dplyr::select(yrwk, n) %>%
-    dplyr::collect()
-  setDT(d_left)
-  setnames(d_left, "n", "value")
-
-  d_right <- pool %>% dplyr::tbl("data_norsyss_recent") %>%
-    dplyr::filter(location_code== !!location_code) %>%
-    dplyr::filter(granularity_time=="day") %>%
-    dplyr::filter(tag_outcome %in% "covid19_vk_ote") %>%
-    dplyr::filter(age=="total") %>%
-    dplyr::filter(date >= !!config$start_date) %>%
-    dplyr::select(yrwk, n, consult_with_influenza) %>%
-    dplyr::group_by(yrwk) %>%
-    dplyr::summarize(n=sum(n), consult_with_influenza=sum(consult_with_influenza)) %>%
-    dplyr::collect()
-  setDT(d_right)
-
-  d_third <- pool %>%
-    dplyr::tbl("data_covid19_lab_by_time_location") %>%
-    dplyr::filter(location_code== !!location_code) %>%
-    dplyr::filter(granularity_time=="day") %>%
-    dplyr::filter(date >= !!config$start_date) %>%
-    dplyr::select(yrwk, n_neg, n_pos) %>%
-    dplyr::collect()
-  setDT(d_third)
-
-  d_third <- d_third[,.(
-    pr100_pos = 100*sum(n_pos)/sum(n_pos+n_neg)
-  ),keyby=.(yrwk)]
-  d_third[is.nan(pr100_pos), pr100_pos := 0]
-  setnames(d_third, "pr100_pos", "value")
-
-  d_right[,censor := ""]
-  d_right[censor=="" & n>0 & n<5, censor := "N"]
-  d_right[censor != "", n := 0]
-
-  d_right[, value := 100* n / consult_with_influenza]
-  d_right[is.nan(value), value := 0]
-  d_right[value>60, value := 60]
-  d_right[, no_data := consult_with_influenza==0]
-  d_right[,consult_with_influenza := NULL]
-
-
-  ## Create table
-  pd_xl <- make_table_generic(d_left, d_right, d_third)
-
-  ## Create plot
-  censored <- d_right[censor!=""]$yrwk
-  no_data <- d_right[no_data==T]$yrwk
-
-  pd_plot <- covid19_plot_single(
-    granularity_time = "week",
-    d_left = d_left,
-    d_right = d_right,
-    d_third = d_third,
-    censored = censored,
-    no_data = no_data,
-    type_left="col",
-    labs_left = "Antall tilfeller meldt til MSIS",
-    labs_right = "Andel NorSySS konsultasjoner\n og andel positive laboratorietester\n",
-    labs_title = glue::glue(
-      "{names(config$choices_location_with_ward)[config$choices_location_with_ward==location_code]}\n",
-      "Antall covid-19 meldinger til MSIS og andel konsultasjoner for\n",
-      "covid-19 (mistenkt, sannsynlig eller bekreftet) på legekontor og legevakt\n",
-      "Data fra NorSySS og MSIS"
-    ),
-    labs_caption = glue::glue(
-      "\nRøde * på x-aksen viser sensurerte data\n",
-      "Søylene skal leses av på venstre side, den røde linjen skal leses av på høyre side\n",
-      "Nevneren på andelen er totalt antall konsultasjoner per dato i valgt geografisk område\n",
-      "Røde stiplede vertikale linjer på figuren betyr at ingen konsultasjoner er rapportert på disse datoene\n",
-      "Folkehelseinstituttet, {format(lubridate::today(),'%d.%m.%Y')}"
-    ),
-    right_legend_labs = c(
-      "Andel NorSySS konsultasjoner",
-      "Andel positive laboratorietester",
-      "Antall tilfeller meldt til MSIS"
-    ),
-    right_legend_direction = -1,
-    multiplier_min_y_censor = -0.2,
-    multiplier_min_y_end = -0.14,
-    multiplier_min_y_start = -0.175,
-    left_labels = fhiplot::format_nor,
-    every_nth = 2
-  )
-
-  list(pd_plot = pd_plot, pd_xl = pd_xl)
-}
-
-covid19_norsyss_vs_msis_weekly <- function(
-  location_code,
-  config
-){
-
-  d_left <- pool %>% dplyr::tbl("data_covid19_msis_by_time_location") %>%
-    dplyr::filter(granularity_time == "week") %>%
-    dplyr::filter(location_code== !!location_code) %>%
-    dplyr::filter(date >= !!config$start_date) %>%
-    dplyr::select(yrwk, n) %>%
-    dplyr::collect()
-  setDT(d_left)
-  setnames(d_left, "n", "value")
-
-  d_right <- pool %>% dplyr::tbl("data_norsyss_recent") %>%
-    dplyr::filter(location_code== !!location_code) %>%
-    dplyr::filter(granularity_time=="day") %>%
-    dplyr::filter(tag_outcome %in% "covid19_vk_ote") %>%
-    dplyr::filter(age=="total") %>%
-    dplyr::filter(date >= !!config$start_date) %>%
-    dplyr::select(yrwk, n, consult_with_influenza) %>%
-    dplyr::group_by(yrwk) %>%
-    dplyr::summarize(n=sum(n), consult_with_influenza=sum(consult_with_influenza)) %>%
-    dplyr::collect()
-  setDT(d_right)
-
-  d_right[,censor := ""]
-  d_right[censor=="" & n>0 & n<5, censor := "N"]
-  d_right[censor != "", n := 0]
-
-  d_right[, value := 100* n / consult_with_influenza]
-  d_right[is.nan(value), value := 0]
-  d_right[value>60, value := 60]
-  d_right[, no_data := consult_with_influenza==0]
-  d_right[,consult_with_influenza := NULL]
-
-
-  ## Create table
-  pd_xl <- make_table_generic(d_left, d_right)
-
-  ## Create plot
-  censored <- d_right[censor!=""]$yrwk
-  no_data <- d_right[no_data==T]$yrwk
-
-  pd_plot <- covid19_plot_single(
-    granularity_time = "week",
-    d_left = d_left,
-    d_right = d_right,
-    censored = censored,
-    no_data = no_data,
-    type_left="col",
-    labs_left = "Antall tilfeller meldt til MSIS",
-    labs_right = "Andel NorSySS konsultasjoner\n",
-    labs_title = glue::glue(
-      "{names(config$choices_location_with_ward)[config$choices_location_with_ward==location_code]}\n",
-      "Antall covid-19 meldinger til MSIS og andel konsultasjoner for\n",
-      "covid-19 (mistenkt, sannsynlig eller bekreftet) på legekontor og legevakt\n",
-      "Data fra NorSySS og MSIS"
-    ),
-    labs_caption = glue::glue(
-      "\nRøde * på x-aksen viser sensurerte data\n",
-      "Søylene skal leses av på venstre side, den røde linjen skal leses av på høyre side\n",
-      "Nevneren på andelen er totalt antall konsultasjoner per dato i valgt geografisk område\n",
-      "Røde stiplede vertikale linjer på figuren betyr at ingen konsultasjoner er rapportert på disse datoene\n",
-      "Folkehelseinstituttet, {format(lubridate::today(),'%d.%m.%Y')}"
-    ),
-    multiplier_min_y_censor = -0.2,
-    multiplier_min_y_end = -0.14,
-    multiplier_min_y_start = -0.175,
-    left_labels = fhiplot::format_nor,
-    every_nth = 2
   )
 
   list(pd_plot = pd_plot, pd_xl = pd_xl)
