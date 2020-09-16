@@ -669,10 +669,10 @@ covid19_server <- function(input, output, session, config) {
   )
 
   # fig 2 ----
-  output$overview_plot_national_source_proportion <- renderCachedPlot({
+  output$overview_plot_national_syndromes_proportion <- renderCachedPlot({
     req(input$covid_location_code)
 
-    covid19_overview_plot_national_source_proportion(
+    covid19_overview_plot_national_syndromes_proportion(
       location_code = input$covid_location_code,
       config = config
     )
