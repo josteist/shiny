@@ -20,8 +20,8 @@ news_faq_ui <- function(id, config) {
 
           strong("Hvordan kan jeg få en liste over totalt antall covid-19 tilfeller i et geografisk område?"), br(),
           "Vi jobber med å lage en kolonne med totalt antall i Tabell 1.", br(),
-           "Som en midlertidig løsning kan du laste ned tabellen for figur 1,", br(),
-          " og summere alle i MSIS kolonnen i excelarket.", br(),br(),
+           "Som en midlertidig løsning kan du velge det geografiske området du ønsker øverst i nettsiden.",
+           "Last deretter ned tabellen for figur 1 og summer alle i MSIS kolonnen.", br(),br(),
 
 
           strong("Hvor ofte oppdateres dataene i nettsiden?"), br(),
