@@ -96,8 +96,6 @@ covid19_ui <- function(id, config) {
                " Mer informasjon om de forskjellige datakildene finner du i 'informasjon' fanen.",
                  " I tabellen vil det kunne være noen celler uten tall, men med betegnelsen 'IK'.",
                  " Disse dataene er foreløpig ikke tilgjengelige på det valgte geografiske nivået.", br(),
-               " Dataene vises med år-ukenummer.",
-               a(href="https://www.norskkalender.no/", " Trykk HER for å se kalender med oversikt over ukenumrene fra Norskkalender.no"),br(), br(),
                 br(),br()
               )
             )

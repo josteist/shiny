@@ -32,6 +32,9 @@ news_news_ui <- function(id, config) {
           strong("Covid-19 ukerapport fra FHI"), br(),
           a(href="https://www.fhi.no/publ/2020/koronavirus-ukerapporter/", "Trykk HER for å se covid-19 ukerapportene"),br(), br(),
 
+          strong("Covid-19 risikovurdering fra FHI"), br(),
+          a(href="https://www.fhi.no/publ/2020/covid-19-epidemien-risikovurdering/", "Trykk HER for å se covid-19 risikovurderingene"),br(), br(),
+
           strong("Covid-19 matematisk modelleringsrapport fra FHI"), br(),
           a(href="https://www.fhi.no/sv/smittsomme-sykdommer/corona/koronavirus-modellering/", "Trykk HER for å se covid-19 modelleringsrapportene"),br(), br(),
 
