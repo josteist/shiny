@@ -93,6 +93,7 @@ covid19_ui <- function(id, config) {
                "viser en oversikt over covid-19 med forskjellige indikatorer.", br(),
                " NoPaR står for Norsk Pandemiregister, MSIS står for det nasjonale overvåkningssystemet for smittsomme sykdommer,",
                " MSIS lab står for MSIS laboratoriedatabasen, NorSySS står for konsultasjoner på legekontor og legevakt, Symtometeret står for innbyggerne selvrapportering.",
+               "MSIS-tallene registreres på pasientens bostedskommune, ikke kommunen der pasienten er smittet eller meldt.",
                " Mer informasjon om de forskjellige datakildene finner du i 'informasjon' fanen.",
                  " I tabellen vil det kunne være noen celler uten tall, men med betegnelsen 'IK'.",
                  " Disse dataene er foreløpig ikke tilgjengelige på det valgte geografiske nivået.", br(),
@@ -1294,6 +1295,7 @@ covid19_norsyss_vs_msis_lab_weekly <- function(
       "Søylene skal leses av på venstre side, den røde linjen skal leses av på høyre side\n",
       "Nevneren på andelen er totalt antall konsultasjoner per dato i valgt geografisk område\n",
       "Røde stiplede vertikale linjer på figuren betyr at ingen konsultasjoner er rapportert på disse datoene\n",
+      "MSIS-tallene registreres p{fhi::nb$aa} pasientens bostedskommune, ikke kommunen der pasienten er smittet eller meldt\n",
       "Folkehelseinstituttet, {format(lubridate::today(),'%d.%m.%Y')}"
     ),
     right_legend_labs = c(
@@ -1386,6 +1388,7 @@ covid19_norsyss_vs_msis_weekly <- function(
       "Søylene skal leses av på venstre side, den røde linjen skal leses av på høyre side\n",
       "Nevneren på andelen er totalt antall konsultasjoner per dato i valgt geografisk område\n",
       "Røde stiplede vertikale linjer på figuren betyr at ingen konsultasjoner er rapportert på disse datoene\n",
+      "MSIS-tallene registreres p{fhi::nb$aa} pasientens bostedskommune, ikke kommunen der pasienten er smittet eller meldt\n",
       "Folkehelseinstituttet, {format(lubridate::today(),'%d.%m.%Y')}"
     ),
     multiplier_min_y_censor = -0.2,
@@ -1519,6 +1522,7 @@ covid19_norsyss_vs_msis_lab_daily <- function(
       "Søylene skal leses av på venstre side, den røde linjen skal leses av på høyre side\n",
       "Nevneren på andelen er totalt antall konsultasjoner per dato i valgt geografisk område\n",
       "R{fhi::nb$oe}de stiplede vertikale linjer på figuren betyr at ingen konsultasjoner er rapportert på disse datoene\n",
+      "MSIS-tallene registreres p{fhi::nb$aa} pasientens bostedskommune, ikke kommunen der pasienten er smittet eller meldt\n",
       "Folkehelseinstituttet, {format(lubridate::today(),'%d.%m.%Y')}"
     ),
     right_legend_labs = c(
@@ -1613,6 +1617,7 @@ covid19_norsyss_vs_msis_daily <- function(
       "Søylene skal leses av på venstre side, den røde linjen skal leses av på høyre side\n",
       "Nevneren på andelen er totalt antall konsultasjoner per dato i valgt geografisk område\n",
       "R{fhi::nb$oe}de stiplede vertikale linjer på figuren betyr at ingen konsultasjoner er rapportert på disse datoene\n",
+      "MSIS-tallene registreres p{fhi::nb$aa} pasientens bostedskommune, ikke kommunen der pasienten er smittet eller meldt\n",
       "Folkehelseinstituttet, {format(lubridate::today(),'%d.%m.%Y')}"
     ),
     multiplier_min_y_censor = -0.13,

@@ -12,6 +12,11 @@ news_news_ui <- function(id, config) {
         width=10, align="left",
         p(
 
+          strong("Webinar med gjennomgang og tips for Sykdomspulsen for kommunehelsetjenesten nettsiden blir arrangert 22. oktober kl 11-12."),
+          a(href="https://teams.microsoft.com/l/meetup-join/19%3ameeting_ZmRjODYzOWItOTVlZi00Y2U3LTgwNGItMzhkNDNhNDI0ZTEz%40thread.v2/0?context=%7b%22Tid%22%3a%2254475f80-1baa-4ea9-9185-c0de5cc603fe%22%2c%22Oid%22%3a%2225172700-1b3b-4e6f-8039-3ee6f1bafa1c%22%7d",
+          "Trykk HER for å komme til webinaret"),br(), br(),
+
+
           strong("09.09.2020 Opptak av webinar om influensavaksinasjon"), br(),
           "Onsdag 9. september ble det avholdt et webinar om influensavaksinasjon.", br(),
 
