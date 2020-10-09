@@ -13,16 +13,10 @@
   font-family: "Brandon Medium";
 }
 
-
-
 body, li, a, p {
     font-family: "Brandon Regular", helvetica, arial, sans-serif;
     color: black;
     font-size: 18px;
-}
-
-p a {
-    text-decoration: underline !important;
 }
 
 .control-label {

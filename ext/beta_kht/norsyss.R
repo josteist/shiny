@@ -8,6 +8,8 @@ norsyss_ui <- function(id, config) {
         width=12, align="left",
         p(
           id="toptext",
+          "Du er nå i NorSySS fanen, over denne teksten ser du andre faner du kan velge blant.", br(), br(),
+
           strong("Informasjonen som finnes på denne siden er anonym, men er ment for kommuneleger fordi det krever kunnskap for å tolke disse på riktig måte. Dette er ikke ment som en offisiell statistikk."),br(),br(),
 
           strong("NorSySS er forkortelsen for Norwegian Syndromic Surveillance System som er en del av Sykdomspulsen."), br(),

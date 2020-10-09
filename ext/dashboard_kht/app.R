@@ -1,12 +1,8 @@
 ## app.R ##
-library(pool)
-library(data.table)
-library(magrittr)
-library(ggplot2)
-library(writexl)
 library(shiny)
 library(shinyjs)
 library(shinycssloaders)
+
 
 ## shinycssloaders global optios
 options(list(spinner.type = 6, spinner.color = "#027357"))
@@ -23,23 +19,17 @@ if (.Platform$OS.type == "windows"){
   }, .GlobalEnv)
 }
 
+
 source("global.R")
-
-source("news.R")
-source("news_news.R")
-source("news_faq.R")
-
+source("no_data.R")
 source("covid19.R")
 source("covid19_comparison.R")
 source("covid19_modelling.R")
-
 source("norsyss.R")
 source("norsyss_overview.R")
 source("norsyss_weekly.R")
 source("norsyss_daily.R")
 source("norsyss_information.R")
-
-# end setup
 
 ui <- function(request){
     tagList(
@@ -58,17 +48,10 @@ ui <- function(request){
              navbarPage(
                id = "navbar",
                title = div(img(id="logo",src="fhi.svg", height="40px"), "Sykdomspulsen for kommunehelsetjenesten"),
-
-               tabPanel("Nytt fra FHI",
-                        value="news",
-                        news_ui("news", config=config)
-               ),
-
                tabPanel("Covid-19",
                         value="covid19",
                         covid19_ui("covid19", config=config)
                ),
-
                tabPanel("NorSySS",
                         value="norsyss",
                         norsyss_ui("norsyss", config=config)
@@ -90,13 +73,13 @@ server <- function(input, output, session) {
   observe({
     query <- parseQueryString(session$clientData$url_search)
     selected <- config$choices_location[1]
-    if (!is.null(query[['location_code']])) if(query[['location_code']] %in% fhidata::norway_locations_long_ward_b2020$location_code){
+    if (!is.null(query[['location_code']])) if(query[['location_code']] %in% fhidata::norway_locations_long_b2020$location_code){
       selected <- query[['location_code']]
     }
     updateSelectizeInput(
       session,
       "covid19-covid_location_code",
-      choices=config$choices_location_with_ward,
+      choices=config$choices_location,
       selected = selected
     )
   }, priority=10000)
@@ -146,10 +129,6 @@ server <- function(input, output, session) {
   #     updateQueryString(to_replace, mode = "replace")
   #   }
   # )
-
-  callModule(news_server, "news", config=config)
-  callModule(news_news_server, "news_news", config = config)
-  callModule(news_faq_server, "news_faq", config=config)
 
   callModule(covid19_server, "covid19", config=config)
   callModule(covid19_comparison_server, "covid19_comparison", config = config)

@@ -1,5 +1,10 @@
-source("utils_no_data.R")
-source("utils_mandatory_db_filter.R")
+library(pool)
+library(data.table)
+library(magrittr)
+library(ggplot2)
+library(writexl)
+
+format_nor_perc <- function(x) paste0(fhiplot::format_nor(x, digits=1),"%")
 
 db_config <- list(
   driver = Sys.getenv("DB_DRIVER", "Sql Server"),

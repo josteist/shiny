@@ -1,4 +1,3 @@
-# ui ----
 covid19_ui <- function(id, config) {
   ns <- NS(id)
   dimensionId <- ns("dimension")
@@ -340,9 +339,8 @@ covid19_ui <- function(id, config) {
               width=12, align="left",
 
               p(
-
                 strong("I covid-19 overvåkingen bruker vi data fra NorSySS, MSIS, MSIS laboratoriedatabasen,",
-                " NoPaR, Symptometer og fra modelleringsgruppa på FHI"),br(), br(),
+                " NoPaR, Symptometeret og fra modelleringsgruppa på FHI"),br(), br(),
 
                 strong("NorSySS"),
                 "er forkortelsen for Norwegian Syndromic Surveillance System som er en del av Sykdomspulsen.", br(),
@@ -395,14 +393,12 @@ covid19_ui <- function(id, config) {
                 "- Vi har foreløpig kun NoPaR data på landsnivå på denne nettsiden.", br(),br(),
 
 
-                strong("Symptometer"),
-                " er et overvåkingsverktøy for å fange tidlige signaler på utbrudd av covid-19.",
-                " Et panel på ca. 50 000, ca. 1 % av befolkningen, bes hver uke om å rapportere om de har,",
-                " eller ikke har, symptomer som kan skyldes covid-19.",
-                " Invitasjonene til panelet skal sendes ut mot slutten av september,",
-                " slik at resultater herfra kan forventes i overgangen september – oktober.",
-                "- Symptometer vil bli oppdatert på nettsiden ca kl 13 hver ukedag, i helger og på helligdager blir de foreløpig ikke oppdatert.",
-                 br(),br(),
+                strong("Symptometeret"),
+                " er resultater fra innmelding til 'Meld fra ved mistanke om koronavirus',",
+                " en tjeneste for alle innbyggere for selvrapportering av symptomer som kan skyldes koronavirus.",
+                "- Symptometeret blir oppdatert på nettsiden ca kl 13 hver ukedag, i helger og på helligdager blir de foreløpig ikke oppdatert.",
+                br(),
+                "- Vi har foreløpig ingen data fra Symptometeret på denne nettsiden. Men jobber med saken.", br(),br(),
 
                 strong("Modelleringsdataene"),
                 "blir utarbeidet av modelleringsgruppa på FHI.",br(),
@@ -451,7 +447,7 @@ covid19_ui <- function(id, config) {
                 strong("- MSIS data"), " er basert på pasientens bosted (Folkeregistrerte adressse).", br(),
                 strong("- MSIS laboratoriedata"), " er basert på pasientens bosted (Folkeregistrerte adressse).", br(),
                 strong("- NoPaR")," har foreløpig kun data på landsnivå.", br(),
-                strong("- Symptometer"), " har foreløpig ingen data.", br(),br(),
+                strong("- Symptometeret"), " har foreløpig ingen data.", br(),br(),
 
                  strong("Kommunereformen:"),br(),
                 "Kommunenavn og fylkesnavn følger endrignene som trådte i kraft 1. januar 2020.",br(),
@@ -490,7 +486,7 @@ covid19_ui <- function(id, config) {
                 "bortsett fra figur 3 der de vises hver for seg.", br(),
                 strong("Oppmøte"), " inkluderer takstkodene: 2ad, 2ak, 2fk, 11ak, 11ad", br(),
                 strong("Telefonkonsultasjon"), " inkluderer takstkodenene: 1ad, 1ak, 1bd, 1bk, 1h, 1g", br(),
-                strong("e-konsultasjon"), " inkluderer takstkodene: 2ae, 2aek, samt 1be kun for diagnosekode R991 og R992", br(), br(),
+                strong("e-konsultasjon"), " inkluderer takstkodene: 1be, 2ae", br(), br(),
 
 
                 strong("Luftvei diagnosekoder (samlet) i NorSySS inneholder:"), br(),
@@ -553,7 +549,6 @@ covid19_ui <- function(id, config) {
   )
 }
 
-# server ----
 covid19_server <- function(input, output, session, config) {
   #width <-  as.numeric(input$dimension[1])
 
@@ -726,23 +721,16 @@ covid19_server <- function(input, output, session, config) {
   outputOptions(output, "overview_norsyss_vs_msis", priority = 100)
 }
 
-# functions ----
 
-# tab 1 ----
 overview_metrics_table_main <- function(
   location_code = "norge",
   config = config
 ){
 
-  yrwks <- fhi::isoyearweek_c(lubridate::today()-0:6*6)
+  yrwks <- fhi::isoyearweek(lubridate::today()-0:6*6)
 
   d <- pool %>% dplyr::tbl("results_covid19_metrics") %>%
-    mandatory_db_filter(
-      granularity_time = "week",
-      granularity_geo = NULL,
-      age = "total",
-      sex = "total"
-    ) %>%
+    dplyr::filter(granularity_time == "week") %>%
     dplyr::filter(location_code== !!location_code) %>%
     dplyr::filter(yrwk %in% yrwks) %>%
     dplyr::filter(tag_outcome %in% c(
@@ -793,7 +781,7 @@ overview_metrics_table_main <- function(
     "MSIS lab",
     "NorSySS",
     "NorSySS",
-    "Symptometer"
+    "Symptometeret"
   )
   ]
 
@@ -1093,12 +1081,12 @@ covid19_norsyss_vs_msis <- function(
   config
 ){
   if(get_granularity_geo(location_code) == "nation"){
-    covid19_norsyss_vs_msis_lab_weekly(
+    covid19_norsyss_vs_msis_lab_daily(
       location_code = location_code,
       config = config
     )
   } else if(get_granularity_geo(location_code) == "county") {
-    covid19_norsyss_vs_msis_lab_weekly(
+    covid19_norsyss_vs_msis_lab_daily(
       location_code = location_code,
       config = config
     )
@@ -1464,7 +1452,7 @@ covid19_overview_plot_national_syndromes_proportion <- function(
   config
 ){
   if(get_granularity_geo(location_code) %in% c("nation", "county")){
-    covid19_overview_plot_national_syndromes_proportion_weekly(
+    covid19_overview_plot_national_syndromes_proportion_daily(
       location_code = location_code,
       config = config
     )
@@ -1651,7 +1639,7 @@ covid19_overview_plot_national_source_proportion <- function(
   config
 ){
   if(get_granularity_geo(location_code) %in% c("nation", "county")){
-    covid19_overview_plot_national_source_proportion_weekly(
+    covid19_overview_plot_national_source_proportion_daily(
       location_code = location_code,
       config = config
     )
@@ -1908,7 +1896,7 @@ covid19_overview_plot_national_age_burden <- function(
   if(location_code %in% config$small_location_codes){
     no_data()
   } else if(get_granularity_geo(location_code) %in% c("nation", "county")){
-    covid19_overview_plot_national_age_burden_weekly(
+    covid19_overview_plot_national_age_burden_daily(
       location_code = location_code,
       config = config
     )
@@ -2080,7 +2068,7 @@ covid19_overview_plot_national_age_trends <- function(
   if(location_code %in% config$small_location_codes){
     no_data()
   } else if(get_granularity_geo(location_code) %in% c("nation", "county")){
-    covid19_overview_plot_national_age_trends_weekly(
+    covid19_overview_plot_national_age_trends_daily(
       location_code = location_code,
       config = config
     )
@@ -2408,7 +2396,7 @@ covid19_overview_plot_county_proportion_weekly <- function(
     labels = fhiplot::format_nor_perc_0
   )
   q <- q + expand_limits(y = 0)
-  q <- q + scale_x_discrete(NULL)#, breaks = fhiplot::every_nth(4))
+  q <- q + scale_x_discrete(NULL)
   q <- q + fhiplot::scale_fill_fhi(NULL, guide="none")
   q <- q + fhiplot::scale_color_fhi(NULL)
   if(granularity_geo=="nation"){

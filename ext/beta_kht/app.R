@@ -54,27 +54,28 @@ ui <- function(request){
       width: 1200px;
       }
    "),
-    tags$div(class="container",
-             navbarPage(
-               id = "navbar",
-               title = div(img(id="logo",src="fhi.svg", height="40px"), "Sykdomspulsen for kommunehelsetjenesten"),
+    tags$div(
+      class="container",
+      navbarPage(
+        id = "navbar",
+        title = div(img(id="logo",src="fhi.svg", height="40px"), "Sykdomspulsen for kommunehelsetjenesten"),
 
-               tabPanel("Nytt fra FHI",
-                        value="news",
-                        news_ui("news", config=config)
-               ),
+        tabPanel("Nytt fra FHI",
+          value="news",
+          news_ui("news", config=config)
+        ),
 
-               tabPanel("Covid-19",
-                        value="covid19",
-                        covid19_ui("covid19", config=config)
-               ),
+        tabPanel("Covid-19",
+          value="covid19",
+          covid19_ui("covid19", config=config)
+        ),
 
-               tabPanel("NorSySS",
-                        value="norsyss",
-                        norsyss_ui("norsyss", config=config)
-               ),
-               theme = "fhi.css"
-             )
+        tabPanel("NorSySS",
+          value="norsyss",
+          norsyss_ui("norsyss", config=config)
+        ),
+        theme = "fhi.css"
+      )
     )
   )
 }
